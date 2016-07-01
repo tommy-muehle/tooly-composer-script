@@ -13,12 +13,25 @@ For an quick example look at the [composer.json](composer.json#L48-L57) here.
 
 To use the script just do the following single command:
 
+*Note: There are no further dependencies in this library. Only PHP.*
+
 ```
 composer require tm/tooly-composer-script
 ```
 
-*Note:*
-There are no further dependencies in this library. Only PHP.
+Then add the script in the composer.json under *"scripts"* with the event names you want to trigger.
+For example:
+
+```
+...
+"scripts": {
+    "post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
+    "post-update-cmd": "Tooly\\ScriptHandler::installPharTools"
+  },
+...
+```
+
+Look [here](https://getcomposer.org/doc/articles/scripts.md#event-names) for more informations about composer events.
 
 ## Usage
 
