@@ -81,6 +81,11 @@ class Processor
             return false;
         }
 
+        $directory = dirname($filename);
+        if (!file_exists($directory)) {
+            @mkdir($directory, 0777, true);
+        }
+
         file_put_contents($filename, $data);
         chmod($filename, 0755);
 
