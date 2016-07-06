@@ -17,7 +17,7 @@ install:
 script:
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 after_success:
-  - bin/test-reporter
+  - ./vendor/bin/test-reporter
 notifications:
   email: false
 addons:
