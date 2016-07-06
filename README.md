@@ -10,6 +10,16 @@
 With the tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) aka hook you can manage needed phar files, such as phpunit, in your composer.json.
 Every phar file will be saved in the [composer binary directory](https://getcomposer.org/doc/articles/vendor-binaries.md).
 
+## Why
+
+Because of dependency-encapsulation! An example. You have a symfony application with a lot of commands and 
+want to use the [php7cc](https://github.com/sstalle/php7cc) as an composer dev requirement. 
+
+Add this to your composer.json file and you are perhaps in a dependency hell. 
+Because your symfony app needs the symfony console component in version x and php7cc in version y.
+
+That is the situation you should use phar's for developing.
+
 ## Example
 
 For an quick example look at the [composer.json](composer.json#L48-L57) here.
@@ -72,6 +82,11 @@ the existing phar if the remote and local phar has not the same checksum.
 
 The *"only-dev"* parameter is optional. Its default true and means that this phar is only needed in developing mode.
 So the command ```composer [install|update] --no-dev``` ignores this phar tool.
+
+## A note to PhpStorm or other IDE users
+
+To furthermore have auto-suggestion you should set the "include_path" option in the project.
+![PhpStorm setting](resources/phpstorm-setting.png|width=600)
 
 ## Contributing
 
