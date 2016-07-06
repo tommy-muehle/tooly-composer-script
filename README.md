@@ -86,7 +86,7 @@ So the command ```composer [install|update] --no-dev``` ignores this phar tool.
 ## A note to PhpStorm or other IDE users
 
 To furthermore have auto-suggestion you should set the "include_path" option in the project.
-![PhpStorm setting](resources/phpstorm-setting.png|width=600)
+![PhpStorm setting](resources/phpstorm-setting.png)
 
 ## Contributing
 
