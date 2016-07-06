@@ -18,20 +18,27 @@ class Tool
     private $filename;
 
     /**
-     * @var array
+     * @var string
      */
-    private $parameters = [];
+    private $url;
+
+    /**
+     * @var bool
+     */
+    private $onlyDev = true;
 
     /**
      * @param string $name
      * @param string $filename
-     * @param array  $parameters
+     * @param string $url
+     * @param bool   $onlyDev
      */
-    public function __construct($name, $filename, array $parameters)
+    public function __construct($name, $filename, $url, $onlyDev = true)
     {
         $this->name = $name;
         $this->filename = $filename;
-        $this->parameters = $parameters;
+        $this->url = $url;
+        $this->onlyDev = $onlyDev;
     }
 
     /**
@@ -51,42 +58,18 @@ class Tool
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getUrl()
     {
-        return $this->parameters['url'];
+        return $this->url;
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
-    public function isUrlAccessible()
+    public function isOnlyDev()
     {
-        return is_resource(@fopen($this->parameters['url'], 'r'));
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOnlyForDevMode()
-    {
-        return $this->parameters['only-dev'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isFileAlreadyExisting()
-    {
-        return file_exists($this->filename);
-    }
-
-    /**
-     * @return bool
-     */
-    public function doVerify()
-    {
-        return sha1_file($this->filename) === sha1_file($this->parameters['url']);
+        return $this->onlyDev;
     }
 }

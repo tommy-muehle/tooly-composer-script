@@ -8,7 +8,10 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
+use Tooly\Exception\DownloadException;
 use Tooly\Model\Tool;
+use Tooly\Script\Helper\Downloader;
+use Tooly\Script\Helper\Filesystem;
 use Tooly\Script\Processor;
 
 /**
@@ -39,107 +42,188 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $helperset->set(new QuestionHelper);
         $helperset->get('question')->setInputStream($input);
 
-        $io = new ConsoleIO(new ArrayInput([]), $output, $helperset);
-
-        $this->processor = new Processor($io);
+        $this->io = new ConsoleIO(new ArrayInput([]), $output, $helperset);
         $this->output = $output;
     }
 
-    public function testNonAccessibleUrlReturnsError()
+    public function testEmptyToolsReturnsDocumentation()
     {
-        $tool = $this
-            ->getMockBuilder(Tool::class)
-            ->setConstructorArgs(['test', 'test', ['url' => 'unreachable']])
-            ->setMethods(['isUrlAccessible'])
-            ->getMock();
+        vfsStream::setup();
 
-        $tool
-            ->method('isUrlAccessible')
-            ->willReturn(false);
-
-        $this->processor->downloadTool($tool);
+        $processor = new Processor($this->io, new Filesystem, new Downloader);
+        $processor->downloadTools([], 'vfs://root');
 
         $this->assertRegexp(
-            '/Sorry\! Cannot access \"unreachable"\!/',
+            '/No \"tools\" are found under the \"extra\" section in your composer\.json\!/',
             $this->getDisplay($this->output)
         );
     }
 
-    public function testAlreadyExistingFileReturnsNotice()
+    public function testNoDevModeToolsAreSkipped()
     {
-        $tool = $this
-            ->getMockBuilder(Tool::class)
-            ->setConstructorArgs(['test', 'test', []])
-            ->setMethods(['isUrlAccessible', 'isFileAlreadyExisting', 'doVerify'])
+        vfsStream::setup();
+
+        $processor = new Processor($this->io, new Filesystem, new Downloader, false);
+        $processor->downloadTools(['tool' => ['url' => 'fake', 'only-dev' => true]], 'vfs://root');
+
+        $this->assertRegexp(
+            '/Only installed in Dev mode/',
+            $this->getDisplay($this->output)
+        );
+    }
+
+    /**
+     * @expectedException \Tooly\Exception\DownloadException
+     */
+    public function testNonAccessibleUrlReturnsError()
+    {
+        vfsStream::setup();
+
+        $downloader = $this
+            ->getMockBuilder(Downloader::class)
+            ->setMethods(['isAccessible'])
             ->getMock();
 
-        $tool
-            ->method('isUrlAccessible')
+        $downloader
+            ->method('isAccessible')
+            ->willReturn(false);
+
+        $processor = new Processor($this->io, new Filesystem, $downloader);
+        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
+    }
+
+    public function testAlreadyExistingFileReturnsNotice()
+    {
+        vfsStream::setup();
+
+        $filesystem = $this
+            ->getMockBuilder(Filesystem::class)
+            ->setMethods(['isFileAlreadyExist', 'doVerify'])
+            ->getMock();
+
+        $filesystem
+            ->method('isFileAlreadyExist')
             ->willReturn(true);
 
-        $tool
-            ->method('isFileAlreadyExisting')
-            ->willReturn(true);
-
-        $tool
+        $filesystem
             ->method('doVerify')
             ->willReturn(true);
 
-        $this->processor->downloadTool($tool);
+        $downloader = $this
+            ->getMockBuilder(Downloader::class)
+            ->setMethods(['isAccessible'])
+            ->getMock();
+
+        $downloader
+            ->method('isAccessible')
+            ->willReturn(true);
+
+        $processor = new Processor($this->io, $filesystem, $downloader);
+        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
 
         $this->assertRegexp(
-            '/File \"test\" already exist in given version\./',
+            '/are already exist in given version/',
             $this->getDisplay($this->output)
         );
     }
 
     public function testAlreadyExistingFileButWrongVerificationReturnsQuestion()
     {
-        $tool = $this
-            ->getMockBuilder(Tool::class)
-            ->setConstructorArgs(['test', 'test', []])
-            ->setMethods(['isUrlAccessible', 'isFileAlreadyExisting', 'doVerify'])
+        vfsStream::setup();
+
+        $filesystem = $this
+            ->getMockBuilder(Filesystem::class)
+            ->setMethods(['isFileAlreadyExist', 'doVerify'])
             ->getMock();
 
-        $tool
-            ->method('isUrlAccessible')
+        $filesystem
+            ->method('isFileAlreadyExist')
             ->willReturn(true);
 
-        $tool
-            ->method('isFileAlreadyExisting')
-            ->willReturn(true);
-
-        $tool
+        $filesystem
             ->method('doVerify')
             ->willReturn(false);
 
-        $this->processor->downloadTool($tool);
+        $downloader = $this
+            ->getMockBuilder(Downloader::class)
+            ->setMethods(['isAccessible'])
+            ->getMock();
+
+        $downloader
+            ->method('isAccessible')
+            ->willReturn(true);
+
+        $processor = new Processor($this->io, $filesystem, $downloader);
+        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
 
         $this->assertRegexp(
-            '/Checksums are not equal\!
-Do you want to overwrite the existing file \"test\"\?
-\[yes\] or \[no\]\?/',
+            '/Do you want to overwrite the existing file/',
             $this->getDisplay($this->output)
         );
+    }
+
+    /**
+     * @expectedException \Tooly\Exception\DownloadException
+     */
+    public function testInvalidDownloadReturnsException()
+    {
+        vfsStream::setup();
+
+        $filesystem = $this
+            ->getMockBuilder(Filesystem::class)
+            ->setMethods(['isFileAlreadyExist', 'doVerify'])
+            ->getMock();
+
+        $filesystem
+            ->method('isFileAlreadyExist')
+            ->willReturn(false);
+
+        $filesystem
+            ->method('doVerify')
+            ->willReturn(false);
+
+        $downloader = $this
+            ->getMockBuilder(Downloader::class)
+            ->setMethods(['isAccessible', 'download'])
+            ->getMock();
+
+        $downloader
+            ->method('isAccessible')
+            ->willReturn(true);
+
+        $downloader
+            ->method('download')
+            ->willReturn(false);
+
+        $processor = new Processor($this->io, $filesystem, $downloader);
+        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
     }
 
     public function testCanDownloadAStillNotExistingPharTool()
     {
         vfsStream::setup();
 
-        $tool = new Tool('php-metrics-monitor', 'vfs://root/php-metrics-monitor', [
-            'url' => 'https://github.com/tommy-muehle/php-metrics-monitor/releases/download/1.0.1/memo.phar',
-            'only-dev' => true,
-        ]);
+        $tools = [
+            'php-metrics-monitor' => [
+                'url' => 'https://github.com/tommy-muehle/php-metrics-monitor/releases/download/1.0.1/memo.phar',
+                'only-dev' => true,
+            ]
+        ];
 
-        $this->processor->downloadTool($tool);
+        $processor = new Processor($this->io, new Filesystem, new Downloader, true);
+        $processor->downloadTools($tools, 'vfs://root/');
 
         $this->assertRegexp(
-            '/written\./',
+            '/are written\!/',
             $this->getDisplay($this->output)
         );
     }
 
+    /**
+     * @param StreamOutput $output
+     *
+     * @return string
+     */
     private function getDisplay(StreamOutput $output)
     {
         rewind($output->getStream());
