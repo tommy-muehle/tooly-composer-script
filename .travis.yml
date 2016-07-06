@@ -15,6 +15,11 @@ before_install:
 install:
   - composer install --no-interaction --prefer-source
 script:
-  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+after_success:
+  - bin/test-reporter
 notifications:
   email: false
+addons:
+  code_climate:
+    repo_token: 7f44085be777d3dec1dd765e61461ad1a6f62110e8607f50c25214a417f2af1a

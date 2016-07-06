@@ -1,8 +1,10 @@
 # tooly-composer-script
 
-[![Build Status](https://travis-ci.org/tommy-muehle/tooly-composer-script.svg?branch=master)](https://travis-ci.org/tommy-muehle/tooly-composer-script)
 [![Latest Stable Version](https://poser.pugx.org/tm/tooly-composer-script/v/stable)](https://packagist.org/packages/tm/tooly-composer-script)
 [![Total Downloads](https://poser.pugx.org/tm/tooly-composer-script/downloads)](https://packagist.org/packages/tm/tooly-composer-script)
+[![Build Status](https://travis-ci.org/tommy-muehle/tooly-composer-script.svg?branch=master)](https://travis-ci.org/tommy-muehle/tooly-composer-script)
+[![Code Climate](https://codeclimate.com/github/tommy-muehle/tooly-composer-script/badges/gpa.svg)](https://codeclimate.com/github/tommy-muehle/tooly-composer-script)
+[![Test Coverage](https://codeclimate.com/github/tommy-muehle/tooly-composer-script/badges/coverage.svg)](https://codeclimate.com/github/tommy-muehle/tooly-composer-script/coverage)
 [![License](https://poser.pugx.org/tm/tooly-composer-script/license)](https://packagist.org/packages/tm/tooly-composer-script)
 
 With the tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) aka hook you can manage needed phar files, such as phpunit, in your composer.json.

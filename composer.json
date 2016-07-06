@@ -38,7 +38,8 @@
   },
   "require-dev": {
     "composer/composer": "1.*",
-    "mikey179/vfsstream": "1.6.*"
+    "mikey179/vfsstream": "1.6.*",
+    "codeclimate/php-test-reporter": "dev-master"
   },
   "scripts": {
     "post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
