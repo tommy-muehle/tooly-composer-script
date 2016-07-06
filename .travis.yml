@@ -20,6 +20,12 @@ after_success:
   - ./vendor/bin/test-reporter
 notifications:
   email: false
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/f5bcd59af82eb6dd98b3
+    on_success: always
+    on_failure: always
+    on_start: never
 addons:
   code_climate:
     repo_token: 7f44085be777d3dec1dd765e61461ad1a6f62110e8607f50c25214a417f2af1a
