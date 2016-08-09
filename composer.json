@@ -5,7 +5,10 @@
     "composer",
     "composer-script",
     "phar-management",
-    "composer-phar"
+    "composer-phar",
+    "phar",
+    "phar-handling",
+    "gpg-verification"
   ],
   "homepage": "https://github.com/tommy-muehle/tooly-composer-script",
   "authors": [
@@ -36,6 +39,9 @@
   "require": {
     "php": ">=5.5.0"
   },
+  "suggest": {
+    "tm/gpg-verifier": "Allows verification over GPG for PHAR tools."
+  },
   "require-dev": {
     "composer/composer": "1.*",
     "mikey179/vfsstream": "1.6.*",
@@ -48,12 +54,12 @@
   "extra": {
     "tools": {
       "phpunit": {
-        "url": "https://phar.phpunit.de/phpunit-4.8.9.phar",
-        "only-dev": true
+        "url": "https://phar.phpunit.de/phpunit-5.5.0.phar",
+        "sign-url": "https://phar.phpunit.de/phpunit-5.5.0.phar.asc",
+        "force-replace": true
       },
       "phpcpd": {
-        "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar",
-        "only-dev": true
+        "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar"
       }
     }
   }

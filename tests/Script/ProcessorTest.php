@@ -162,6 +162,41 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testAlreadyExistingFileAndWrongVerificationButPreferSourceOverwrites()
+    {
+        vfsStream::setup();
+
+        $filesystem = $this
+            ->getMockBuilder(Filesystem::class)
+            ->setMethods(['isFileAlreadyExist', 'doVerify'])
+            ->getMock();
+
+        $filesystem
+            ->method('isFileAlreadyExist')
+            ->willReturn(true);
+
+        $filesystem
+            ->method('doVerify')
+            ->willReturn(false);
+
+        $downloader = $this
+            ->getMockBuilder(Downloader::class)
+            ->setMethods(['isAccessible'])
+            ->getMock();
+
+        $downloader
+            ->method('isAccessible')
+            ->willReturn(true);
+
+        $processor = new Processor($this->io, $filesystem, $downloader);
+        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
+
+        $this->assertRegexp(
+            '/Do you want to overwrite the existing file/',
+            $this->getDisplay($this->output)
+        );
+    }
+
     /**
      * @expectedException \Tooly\Exception\DownloadException
      */

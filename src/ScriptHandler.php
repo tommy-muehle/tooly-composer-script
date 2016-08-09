@@ -2,11 +2,14 @@
 
 namespace Tooly;
 
+use Composer\IO\IOInterface;
 use Composer\Script\Event;
+use Tooly\Factory\ToolFactory;
+use Tooly\Script\Helper;
 use Tooly\Script\Helper\Filesystem;
 use Tooly\Script\Helper\Downloader;
+use Tooly\Script\Helper\Verifier;
 use Tooly\Script\Processor;
-use Tooly\Model\Tool;
 
 /**
  * @package Tooly
@@ -18,21 +21,25 @@ class ScriptHandler
      */
     public static function installPharTools(Event $event)
     {
-        $tools = [];
+        $data = [];
 
-        $io = $event->getIO();
         $composer = $event->getComposer();
         $extras = $composer->getPackage()->getExtra();
 
         if (true === array_key_exists('tools', $extras)) {
-            $tools = array_merge($tools, $extras['tools']);
+            $data = array_merge($data, $extras['tools']);
         }
 
-        try {
-            $processor = new Processor($io, new Filesystem, new Downloader, $event->isDevMode());
-            $processor->downloadTools($tools, $composer->getConfig()->get('bin-dir'));
-        } catch (\Exception $exception) {
-            $io->writeError($exception->getMessage());
+        $tools = ToolFactory::createTools(
+            $event->getComposer()->getConfig()->get('bin-dir'),
+            $data
+        );
+
+        $helper = new Helper(new Filesystem, new Downloader, new Verifier);
+        $processor = new Processor($event->getIO(), $helper, $event->isDevMode());
+
+        foreach ($tools as $tool) {
+            $processor->process($tool);
         }
     }
 }

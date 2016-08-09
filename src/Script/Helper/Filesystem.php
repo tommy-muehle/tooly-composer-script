@@ -8,21 +8,6 @@ namespace Tooly\Script\Helper;
 class Filesystem
 {
     /**
-     * @param string $targetFilename
-     * @param string $filename
-     *
-     * @return bool
-     */
-    public function doVerify($targetFilename, $filename)
-    {
-        if (false === $this->isFileAlreadyExist($targetFilename)) {
-            return false;
-        }
-
-        return sha1_file($targetFilename) === sha1_file($filename);
-    }
-
-    /**
      * @param string $filename
      *
      * @return bool
