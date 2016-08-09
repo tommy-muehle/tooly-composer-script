@@ -23,6 +23,16 @@ class Tool
     private $url;
 
     /**
+     * @var string
+     */
+    private $signUrl;
+
+    /**
+     * @var bool
+     */
+    private $forceReplace = false;
+
+    /**
      * @var bool
      */
     private $onlyDev = true;
@@ -31,13 +41,17 @@ class Tool
      * @param string $name
      * @param string $filename
      * @param string $url
+     * @param string $signUrl
+     * @param bool   $forceReplace
      * @param bool   $onlyDev
      */
-    public function __construct($name, $filename, $url, $onlyDev = true)
+    public function __construct($name, $filename, $url, $signUrl = null, $forceReplace = false, $onlyDev = true)
     {
         $this->name = $name;
         $this->filename = $filename;
         $this->url = $url;
+        $this->signUrl = $signUrl;
+        $this->forceReplace = $forceReplace;
         $this->onlyDev = $onlyDev;
     }
 
@@ -66,10 +80,26 @@ class Tool
     }
 
     /**
+     * @return string
+     */
+    public function getSignUrl()
+    {
+        return $this->signUrl;
+    }
+
+    /**
      * @return boolean
      */
     public function isOnlyDev()
     {
         return $this->onlyDev;
+    }
+
+    /**
+     * @return bool
+     */
+    public function forceReplace()
+    {
+        return $this->forceReplace;
     }
 }
