@@ -45,6 +45,8 @@
   "require-dev": {
     "composer/composer": "1.*",
     "mikey179/vfsstream": "1.6.*",
+    "tm/gpg-verifier": "1.*",
+    "php-mock/php-mock-phpunit": "1.1.*",
     "codeclimate/php-test-reporter": "dev-master"
   },
   "scripts": {
@@ -55,12 +57,27 @@
     "tools": {
       "phpunit": {
         "url": "https://phar.phpunit.de/phpunit-5.5.0.phar",
-        "sign-url": "https://phar.phpunit.de/phpunit-5.5.0.phar.asc",
-        "force-replace": true
+        "sign-url": "https://phar.phpunit.de/phpunit-5.5.0.phar.asc"
       },
       "phpcpd": {
-        "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar"
+        "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar",
+        "sign-url": "https://phar.phpunit.de/phpcpd-2.0.4.phar.asc"
+      },
+      "phpcs": {
+        "url": "https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar",
+        "force-replace": true
+      },
+      "phpmd": {
+        "url": "http://static.phpmd.org/php/latest/phpmd.phar",
+        "force-replace": true
+      },
+      "security-checker": {
+        "url": "http://get.sensiolabs.org/security-checker.phar",
+        "force-replace": true
       }
     }
+  },
+  "config": {
+    "bin-dir": "bin"
   }
 }
