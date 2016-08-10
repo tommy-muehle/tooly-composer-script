@@ -90,7 +90,12 @@ If this parameter is set tooly checks if the PHAR file in url has a valid signat
 comparing signature in sign-url.
 
 This option is useful if you want to be sure that the tool is from the expected author. 
-For the check you need a GPG binary in your $PATH variable.
+
+*Note: There are no further dependencies in this library. Only PHP.*
+For the check you need a further [requirement](https://packagist.org/packages/tm/gpg-verifier) and a GPG binary in your $PATH variable.
+ 
+You can add the requirement with this command:
+```composer require tm/gpg-verifier```
 
 This check often fails if you dont has the public key from the tool author 
 in your GPG keychain. 
