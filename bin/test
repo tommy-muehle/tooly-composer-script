@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+$(PWD)/bin/phpcs --standard=PSR2 $(PWD)/src -v
+$(PWD)/bin/phpcpd $(PWD)/src
+$(PWD)/bin/phpunit -c $(PWD)/phpunit.xml --verbose --debug
+$(PWD)/bin/security-checker security:check $(PWD)/composer.lock
