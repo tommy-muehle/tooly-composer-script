@@ -15,8 +15,8 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $verifier = new Verifier;
         $this->assertTrue($verifier->checkFileSum(
-            __DIR__ . '/../../resources/phpstorm-setting.png',
-            __DIR__ . '/../../resources/phpstorm-setting.png'
+            __DIR__ . '/../../../resources/phpstorm-setting.png',
+            __DIR__ . '/../../../resources/phpstorm-setting.png'
         ));
     }
 
@@ -24,8 +24,8 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $verifier = new Verifier;
         $this->assertFalse($verifier->checkFileSum(
-            __DIR__ . '/../../resources/foo',
-            __DIR__ . '/../../resources/phpstorm-setting.png'
+            __DIR__ . '/../../../resources/foo',
+            __DIR__ . '/../../../resources/phpstorm-setting.png'
         ));
     }
 
