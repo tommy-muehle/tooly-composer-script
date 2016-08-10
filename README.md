@@ -91,8 +91,7 @@ comparing signature in sign-url.
 
 This option is useful if you want to be sure that the tool is from the expected author. 
 
-*Note: There are no further dependencies in this library. Only PHP.*
-For the check you need a further [requirement](https://packagist.org/packages/tm/gpg-verifier) and a GPG binary in your $PATH variable.
+*Note: For the check you need a further [requirement](https://packagist.org/packages/tm/gpg-verifier) and a GPG binary in your $PATH variable.*
  
 You can add the requirement with this command:
 ```composer require tm/gpg-verifier```
