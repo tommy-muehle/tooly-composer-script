@@ -77,10 +77,10 @@ class Helper
         $data = $this->download($fileUrl);
         $signatureData = $this->download($signatureUrl);
 
-        $tmpFile = sys_get_temp_dir() . '_tool';
+        $tmpFile = rtrim(sys_get_temp_dir(), '/') . '/_tool';
         $this->createFile($tmpFile, $data);
 
-        $tmpSignFile = sys_get_temp_dir() . '_tool.sign';
+        $tmpSignFile = rtrim(sys_get_temp_dir(), '/') . '/_tool.sign';
         $this->createFile($tmpSignFile, $signatureData);
 
         $result = $this->verifier->checkGPGSignature($tmpSignFile, $tmpFile);
