@@ -43,34 +43,49 @@ class Processor
      */
     public function process(Tool $tool)
     {
+        $name = $tool->getName();
         $filename = $tool->getFilename();
         $url = $tool->getUrl();
         $signUrl = $tool->getSignUrl();
 
-        $this->io->write(sprintf('<comment>Process tool "%s" ... </comment>', $filename));
+        $this->io->write(sprintf('<comment>Process tool "%s" ...</comment>', $name));
 
         if (false === $this->isDevMode && true === $tool->isOnlyDev()) {
-            $this->io->write('<comment>... skipped! Only installed in Dev mode.</comment>');
+            $this->io->write('<comment>
+... skipped! Only installed in Dev mode.
+</comment>');
             return;
         }
 
         if (false === $this->isAccessible($tool)) {
-            $this->io->write('<error>FOO</error>');
+            $this->io->write('<error>
+At least one given URL are not accessible!
+</error>');
             return;
         }
 
         if (true === $this->helper->isFileAlreadyExist($filename, $url)) {
-            $this->io->write(sprintf('<info>File "%s" are already exist in given version.</info>', $filename));
+            $this->io->write(sprintf('<info>
+File "%s" are already exist in given version.
+</info>', $filename));
             return;
         }
 
-        if ($signUrl !== '' && false === $this->helper->isVerified($signUrl, $url)) {
-            $this->io->write('<error>BAR</error>');
+        if (null !== $signUrl && false === $this->helper->isVerified($signUrl, $url)) {
+            $this->io->write(sprintf('<error>
+Verification failed! Please download the files manually and run the command 
+$ gpg --verify --status-fd 1 /path/to/%s /path/to/%s
+to get more details. In most cases you need to add the public key of the file author.
+So please take a look at the documentation on 
+> https://www.gnupg.org/gph/en/manual/book1.html
+</error>', basename($signUrl), basename($url)));
             return;
         }
 
-        if (false === $this->doReplace($tool)) {
-            $this->io->write('<info>No replace selected. Skipped.</info>');
+        if (file_exists($filename) && false === $this->doReplace($tool)) {
+            $this->io->write('<info>
+No replace selected. Skipped.
+</info>');
             return;
         }
 
@@ -80,7 +95,9 @@ class Processor
         $this->helper->copyFile($filename, $filename . '.phar');
 
         $this->io->write(
-            sprintf('<info>File "%s" %s and copy "%s" are written!</info>', $filename, PHP_EOL, $filename . '.phar')
+            sprintf('<info>
+File "%s" %s and copy "%s" are written!
+</info>', $filename, PHP_EOL, $filename . '.phar')
         );
     }
 
@@ -91,15 +108,14 @@ class Processor
      */
     private function doReplace(Tool $tool)
     {
-        if (false === $this->io->isInteractive() && true === $tool->forceReplace()) {
-            return true;
-        }
-
-        $doReplace = false;
+        $doReplace = $tool->forceReplace();
 
         if (true === $this->io->isInteractive()) {
             $this->io->write('<comment>Checksums are not equal!</comment>');
-            $this->io->write(sprintf('<comment>Do you want to overwrite the existing file "%s"?</comment>', $tool->getName()));
+            $this->io->write(sprintf(
+                '<comment>Do you want to overwrite the existing file "%s"?</comment>',
+                $tool->getName()
+            ));
 
             $doReplace = $this->io->askConfirmation('<question>[yes] or [no]?</question>', false);
         }

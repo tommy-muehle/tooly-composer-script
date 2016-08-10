@@ -4,25 +4,26 @@ namespace Tooly\Tests\Script;
 
 use Composer\IO\ConsoleIO;
 use org\bovigo\vfs\vfsStream;
+use phpmock\phpunit\PHPMock;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
-use Tooly\Exception\DownloadException;
 use Tooly\Model\Tool;
-use Tooly\Script\Helper\Downloader;
-use Tooly\Script\Helper\Filesystem;
+use Tooly\Script\Helper;
 use Tooly\Script\Processor;
 
 /**
- * @package Tooly\Tests\Script
+ * @package Tooly\Tests
  */
 class ProcessorTest extends \PHPUnit_Framework_TestCase
 {
+    use PHPMock;
+
     /**
-     * @var Processor
+     * @var ConsoleIO
      */
-    private $processor;
+    private $io;
 
     /**
      * @var StreamOutput
@@ -33,225 +34,264 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
     {
         $output = new StreamOutput(fopen('php://memory', 'w', false));
 
-        // simulate an input for the question
-        $input = fopen('php://memory', 'r+', false);
-        fputs($input, 'no');
-        rewind($input);
-
         $helperset = new HelperSet;
         $helperset->set(new QuestionHelper);
-        $helperset->get('question')->setInputStream($input);
+        $helperset->get('question')->setInputStream(call_user_func(function() {
+            // simulate an input for the question
+            $input = fopen('php://memory', 'r+', false);
+            fputs($input, 'no');
+            rewind($input);
 
-        $this->io = new ConsoleIO(new ArrayInput([]), $output, $helperset);
+            return $input;
+        }));
+
+        $input = new ArrayInput([]);
+        $input->setInteractive(false);
+
+        $this->io = new ConsoleIO($input, $output, $helperset);
         $this->output = $output;
     }
 
-    public function testEmptyToolsReturnsDocumentation()
+    public function testOnlyDevToolInNoDevModeAreSkipped()
     {
-        vfsStream::setup();
-
-        $processor = new Processor($this->io, new Filesystem, new Downloader);
-        $processor->downloadTools([], 'vfs://root');
-
-        $this->assertRegexp(
-            '/No \"tools\" are found under the \"extra\" section in your composer\.json\!/',
-            $this->getDisplay($this->output)
-        );
-    }
-
-    public function testNoDevModeToolsAreSkipped()
-    {
-        vfsStream::setup();
-
-        $processor = new Processor($this->io, new Filesystem, new Downloader, false);
-        $processor->downloadTools(['tool' => ['url' => 'fake', 'only-dev' => true]], 'vfs://root');
-
-        $this->assertRegexp(
-            '/Only installed in Dev mode/',
-            $this->getDisplay($this->output)
-        );
-    }
-
-    /**
-     * @expectedException \Tooly\Exception\DownloadException
-     */
-    public function testNonAccessibleUrlReturnsError()
-    {
-        vfsStream::setup();
-
-        $downloader = $this
-            ->getMockBuilder(Downloader::class)
-            ->setMethods(['isAccessible'])
+        $helper = $this
+            ->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
             ->getMock();
 
-        $downloader
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isOnlyDev'])
+            ->getMock();
+
+        $tool
+            ->expects($this->once())
+            ->method('isOnlyDev')
+            ->willReturn(true);
+
+        $processor = new Processor($this->io, $helper, false);
+        $processor->process($tool);
+
+        $this->assertRegexp('/skipped/', $this->getDisplay($this->output));
+    }
+
+    public function testNotAccessibleUrlReturnsError()
+    {
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $helper = $this
+            ->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $helper
+            ->expects($this->once())
             ->method('isAccessible')
             ->willReturn(false);
 
-        $processor = new Processor($this->io, new Filesystem, $downloader);
-        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
+        $processor = new Processor($this->io, $helper);
+        $processor->process($tool);
+
+        $this->assertRegexp('/not accessible/', $this->getDisplay($this->output));
     }
 
-    public function testAlreadyExistingFileReturnsNotice()
+    public function testNotAccessibleSignatureUrlReturnsError()
     {
-        vfsStream::setup();
-
-        $filesystem = $this
-            ->getMockBuilder(Filesystem::class)
-            ->setMethods(['isFileAlreadyExist', 'doVerify'])
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getSignUrl'])
             ->getMock();
 
-        $filesystem
+        $tool
+            ->method('getSignUrl')
+            ->willReturn('url');
+
+        $helper = $this
+            ->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $helper
+            ->method('isAccessible')
+            ->willReturnOnConsecutiveCalls(true, false);
+
+        $processor = new Processor($this->io, $helper);
+        $processor->process($tool);
+
+        $this->assertRegexp('/not accessible/', $this->getDisplay($this->output));
+    }
+
+    public function testNothingToDoIfFileAlreadyExistInVersion()
+    {
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $tool
+            ->method('getSignUrl')
+            ->willReturn('url');
+
+        $helper = $this
+            ->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $helper
+            ->method('isAccessible')
+            ->willReturn(true);
+
+        $helper
+            ->expects($this->once())
             ->method('isFileAlreadyExist')
             ->willReturn(true);
 
-        $filesystem
-            ->method('doVerify')
-            ->willReturn(true);
+        $processor = new Processor($this->io, $helper);
+        $processor->process($tool);
 
-        $downloader = $this
-            ->getMockBuilder(Downloader::class)
-            ->setMethods(['isAccessible'])
+        $this->assertRegexp('/already exist in given version/', $this->getDisplay($this->output));
+    }
+
+    public function testInValidSignatureCheckReturnsError()
+    {
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
             ->getMock();
 
-        $downloader
+        $tool
+            ->method('getSignUrl')
+            ->willReturn('url');
+
+        $helper = $this
+            ->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $helper
             ->method('isAccessible')
             ->willReturn(true);
 
-        $processor = new Processor($this->io, $filesystem, $downloader);
-        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
-
-        $this->assertRegexp(
-            '/are already exist in given version/',
-            $this->getDisplay($this->output)
-        );
-    }
-
-    public function testAlreadyExistingFileButWrongVerificationReturnsQuestion()
-    {
-        vfsStream::setup();
-
-        $filesystem = $this
-            ->getMockBuilder(Filesystem::class)
-            ->setMethods(['isFileAlreadyExist', 'doVerify'])
-            ->getMock();
-
-        $filesystem
-            ->method('isFileAlreadyExist')
-            ->willReturn(true);
-
-        $filesystem
-            ->method('doVerify')
-            ->willReturn(false);
-
-        $downloader = $this
-            ->getMockBuilder(Downloader::class)
-            ->setMethods(['isAccessible'])
-            ->getMock();
-
-        $downloader
-            ->method('isAccessible')
-            ->willReturn(true);
-
-        $processor = new Processor($this->io, $filesystem, $downloader);
-        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
-
-        $this->assertRegexp(
-            '/Do you want to overwrite the existing file/',
-            $this->getDisplay($this->output)
-        );
-    }
-
-    public function testAlreadyExistingFileAndWrongVerificationButPreferSourceOverwrites()
-    {
-        vfsStream::setup();
-
-        $filesystem = $this
-            ->getMockBuilder(Filesystem::class)
-            ->setMethods(['isFileAlreadyExist', 'doVerify'])
-            ->getMock();
-
-        $filesystem
-            ->method('isFileAlreadyExist')
-            ->willReturn(true);
-
-        $filesystem
-            ->method('doVerify')
-            ->willReturn(false);
-
-        $downloader = $this
-            ->getMockBuilder(Downloader::class)
-            ->setMethods(['isAccessible'])
-            ->getMock();
-
-        $downloader
-            ->method('isAccessible')
-            ->willReturn(true);
-
-        $processor = new Processor($this->io, $filesystem, $downloader);
-        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
-
-        $this->assertRegexp(
-            '/Do you want to overwrite the existing file/',
-            $this->getDisplay($this->output)
-        );
-    }
-
-    /**
-     * @expectedException \Tooly\Exception\DownloadException
-     */
-    public function testInvalidDownloadReturnsException()
-    {
-        vfsStream::setup();
-
-        $filesystem = $this
-            ->getMockBuilder(Filesystem::class)
-            ->setMethods(['isFileAlreadyExist', 'doVerify'])
-            ->getMock();
-
-        $filesystem
+        $helper
+            ->expects($this->once())
             ->method('isFileAlreadyExist')
             ->willReturn(false);
 
-        $filesystem
-            ->method('doVerify')
+        $helper
+            ->expects($this->once())
+            ->method('isVerified')
             ->willReturn(false);
 
-        $downloader = $this
-            ->getMockBuilder(Downloader::class)
-            ->setMethods(['isAccessible', 'download'])
+        $processor = new Processor($this->io, $helper);
+        $processor->process($tool);
+
+        $this->assertRegexp('/Verification failed/', $this->getDisplay($this->output));
+    }
+
+    public function testNoReplaceForceSkipProcess()
+    {
+        $fileExists = $this
+            ->getFunctionMock('Tooly\Script', 'file_exists')
+            ->expects($this->once())
+            ->willReturn(true);
+
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
             ->getMock();
 
-        $downloader
+        $tool
+            ->method('getSignUrl')
+            ->willReturn('url');
+
+        $tool
+            ->expects($this->once())
+            ->method('forceReplace')
+            ->willReturn(false);
+
+        $helper = $this
+            ->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $helper
             ->method('isAccessible')
             ->willReturn(true);
 
-        $downloader
+        $helper
+            ->expects($this->once())
+            ->method('isFileAlreadyExist')
+            ->willReturn(false);
+
+        $helper
+            ->expects($this->once())
+            ->method('isVerified')
+            ->willReturn(true);
+
+        $processor = new Processor($this->io, $helper);
+        $processor->process($tool);
+
+        $this->assertRegexp('/No replace selected/', $this->getDisplay($this->output));
+    }
+
+    public function testCanDownloadATool()
+    {
+        vfsStream::setup();
+
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $tool
+            ->method('getSignUrl')
+            ->willReturn('url');
+
+        $tool
+            ->method('forceReplace')
+            ->willReturn(true);
+
+        $tool
+            ->method('getFilename')
+            ->willReturn('vfs://root/tool');
+
+        $tool
+            ->method('getName')
+            ->willReturn('tool');
+
+        $helper = $this
+            ->getMockBuilder(Helper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $helper
+            ->method('isAccessible')
+            ->willReturn(true);
+
+        $helper
+            ->expects($this->once())
+            ->method('isFileAlreadyExist')
+            ->willReturn(false);
+
+        $helper
+            ->expects($this->once())
+            ->method('isVerified')
+            ->willReturn(true);
+
+        $helper
+            ->expects($this->once())
             ->method('download')
-            ->willReturn(false);
+            ->willReturn('download-content');
 
-        $processor = new Processor($this->io, $filesystem, $downloader);
-        $processor->downloadTools(['tool' => ['url' => 'fake']], 'vfs://root');
-    }
+        $processor = new Processor($this->io, $helper);
+        $processor->process($tool);
 
-    public function testCanDownloadAStillNotExistingPharTool()
-    {
-        vfsStream::setup();
-
-        $tools = [
-            'php-metrics-monitor' => [
-                'url' => 'https://github.com/tommy-muehle/php-metrics-monitor/releases/download/1.0.1/memo.phar',
-                'only-dev' => true,
-            ]
-        ];
-
-        $processor = new Processor($this->io, new Filesystem, new Downloader, true);
-        $processor->downloadTools($tools, 'vfs://root/');
-
-        $this->assertRegexp(
-            '/are written\!/',
-            $this->getDisplay($this->output)
-        );
+        $this->assertRegexp('/are written/', $this->getDisplay($this->output));
     }
 
     /**
@@ -262,7 +302,6 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
     private function getDisplay(StreamOutput $output)
     {
         rewind($output->getStream());
-
         return stream_get_contents($output->getStream());
     }
 }

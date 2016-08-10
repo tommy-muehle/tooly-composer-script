@@ -2,7 +2,7 @@
 
 namespace Tooly\Script\Helper;
 
-use TM\GPG\Verification\Verifier as RealVerifier;
+use TM\GPG\Verification\Verifier as GPGVerifier;
 use TM\GPG\Verification\Exception\VerificationException;
 
 /**
@@ -11,13 +11,30 @@ use TM\GPG\Verification\Exception\VerificationException;
 class Verifier
 {
     /**
+     * @var GPGVerifier
+     */
+    private $gpgVerifier;
+
+    /**
+     * @param GPGVerifier|null $gpgVerifier
+     */
+    public function __construct(GPGVerifier $gpgVerifier = null)
+    {
+        $this->gpgVerifier = $gpgVerifier;
+    }
+
+    /**
      * @param string $targetFilename
      * @param string $filename
      *
      * @return bool
      */
-    public function checkSha1($targetFilename, $filename)
+    public function checkFileSum($targetFilename, $filename)
     {
+        if (!file_exists($targetFilename)) {
+            return false;
+        }
+
         return sha1_file($targetFilename) === sha1_file($filename);
     }
 
@@ -27,16 +44,14 @@ class Verifier
      *
      * @return bool
      */
-    public function checkGPG($signatureFile, $file)
+    public function checkGPGSignature($signatureFile, $file)
     {
-        if (false === class_exists(RealVerifier::class)) {
+        if (!$this->gpgVerifier instanceof GPGVerifier) {
             return true;
         }
 
-        $verifier = new RealVerifier;
-
         try {
-            $verifier->verify($signatureFile, $file);
+            $this->gpgVerifier->verify($signatureFile, $file);
             return true;
         } catch (VerificationException $exception) {
             return false;

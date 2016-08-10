@@ -57,7 +57,7 @@ class Helper
     public function isFileAlreadyExist($filename, $targetFile)
     {
         $alreadyExist = $this->filesystem->isFileAlreadyExist($filename);
-        $verification = $this->verifier->checkSha1($filename, $targetFile);
+        $verification = $this->verifier->checkFileSum($filename, $targetFile);
 
         if (true === $alreadyExist && true === $verification) {
             return true;
@@ -78,12 +78,12 @@ class Helper
         $signatureData = $this->download($signatureUrl);
 
         $tmpFile = sys_get_temp_dir() . '_tool';
-        file_put_contents($tmpFile, $data);
+        $this->createFile($tmpFile, $data);
 
         $tmpSignFile = sys_get_temp_dir() . '_tool.sign';
-        file_put_contents($tmpSignFile, $signatureData);
+        $this->createFile($tmpSignFile, $signatureData);
 
-        $result = $this->verifier->checkGPG($tmpSignFile, $tmpFile);
+        $result = $this->verifier->checkGPGSignature($tmpSignFile, $tmpFile);
 
         unlink($tmpFile);
         unlink($tmpSignFile);
