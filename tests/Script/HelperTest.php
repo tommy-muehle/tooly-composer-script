@@ -83,4 +83,19 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($helper->isFileAlreadyExist('foo', 'bar'));
         $this->assertFalse($helper->isFileAlreadyExist('foo', 'bar'));
     }
+
+    public function testCanCopyAFile()
+    {
+        $filesystem = $this
+            ->getMockBuilder(Filesystem::class)
+            ->getMock();
+
+        $filesystem
+            ->expects($this->once())
+            ->method('copyFile')
+            ->willReturn(true);
+
+        $helper = new Helper($filesystem, new Downloader, new Verifier);
+        $this->assertTrue($helper->copyFile('foo', 'bar'));
+    }
 }
