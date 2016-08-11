@@ -66,7 +66,7 @@ At least one given URL are not accessible!
 
         if (true === $this->helper->isFileAlreadyExist($filename, $url)) {
             $this->io->write(sprintf('<info>
-File "%s" are already exist in given version.
+File "%s" already exists in the given version.
 </info>', $filename));
             return;
         }
