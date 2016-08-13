@@ -154,7 +154,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $processor = new Processor($this->io, $helper);
         $processor->process($tool);
 
-        $this->assertRegexp('/already exist in given version/', $this->getDisplay($this->output));
+        $this->assertRegexp('/already exists in the given version/', $this->getDisplay($this->output));
     }
 
     public function testInValidSignatureCheckReturnsError()
