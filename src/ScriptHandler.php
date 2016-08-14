@@ -2,9 +2,7 @@
 
 namespace Tooly;
 
-use Composer\IO\IOInterface;
 use Composer\Script\Event;
-use Tooly\Factory\ToolFactory;
 use Tooly\Script\Configuration;
 use Tooly\Script\Helper;
 use Tooly\Script\Helper\Filesystem;
