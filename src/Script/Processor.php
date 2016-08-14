@@ -3,6 +3,12 @@
 namespace Tooly\Script;
 
 use Composer\IO\IOInterface;
+use Tooly\Script\Decision\DecisionInterface;
+use Tooly\Script\Decision\DoReplaceDecision;
+use Tooly\Script\Decision\FileAlreadyExistDecision;
+use Tooly\Script\Decision\IsAccessibleDecision;
+use Tooly\Script\Decision\IsVerifiedDecision;
+use Tooly\Script\Decision\OnlyDevDecision;
 use Tooly\Script\Helper;
 use Tooly\Model\Tool;
 
@@ -22,20 +28,20 @@ class Processor
     private $helper;
 
     /**
-     * @var bool
+     * @var Configuration
      */
-    private $isDevMode = true;
+    private $configuration;
 
     /**
-     * @param IOInterface $io
-     * @param Helper      $helper
-     * @param bool        $isDevMode
+     * @param IOInterface   $io
+     * @param Helper        $helper
+     * @param Configuration $configuration
      */
-    public function __construct(IOInterface $io, Helper $helper, $isDevMode = true)
+    public function __construct(IOInterface $io, Helper $helper, Configuration $configuration)
     {
         $this->io = $io;
         $this->helper = $helper;
-        $this->isDevMode = $isDevMode;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -43,105 +49,40 @@ class Processor
      */
     public function process(Tool $tool)
     {
-        $name = $tool->getName();
+        $this->io->write(sprintf('<comment>Process tool "%s" ...</comment>', $tool->getName()));
+
+        /* @var $decision DecisionInterface */
+        foreach ($this->getDecisions() as $decision) {
+            if (true === $decision->decide($tool)) {
+                continue;
+            }
+
+            $this->io->write($decision->getReason());
+            return;
+        }
+
+        $data = $this->helper->download($tool->getUrl());
         $filename = $tool->getFilename();
-        $url = $tool->getUrl();
-        $signUrl = $tool->getSignUrl();
-
-        $this->io->write(sprintf('<comment>Process tool "%s" ...</comment>', $name));
-
-        if (false === $this->isDevMode && true === $tool->isOnlyDev()) {
-            $this->io->write('<comment>
-... skipped! Only installed in Dev mode.
-</comment>');
-            return;
-        }
-
-        if (false === $this->isAccessible($tool)) {
-            $this->io->write('<error>
-At least one given URL are not accessible!
-</error>');
-            return;
-        }
-
-        if (true === $this->helper->isFileAlreadyExist($filename, $url)) {
-            $this->io->write(sprintf('<info>
-File "%s" already exists in the given version.
-</info>', $filename));
-            return;
-        }
-
-        if (null !== $signUrl && false === $this->helper->isVerified($signUrl, $url)) {
-            $this->io->write(sprintf('<error>
-Verification failed! Please download the files manually and run the command 
-$ gpg --verify --status-fd 1 /path/to/%s /path/to/%s
-to get more details. In most cases you need to add the public key of the file author.
-So please take a look at the documentation on 
-> https://www.gnupg.org/gph/en/manual/book1.html
-</error>', basename($signUrl), basename($url)));
-            return;
-        }
-
-        if (file_exists($filename) && false === $this->doReplace($tool)) {
-            $this->io->write('<info>
-No replace selected. Skipped.
-</info>');
-            return;
-        }
-
-        $data = $this->helper->download($url);
 
         $this->helper->createFile($filename, $data);
         $this->helper->copyFile($filename, $filename . '.phar');
 
-        $this->io->write(
-            sprintf('<info>
-File "%s" %s and copy "%s" are written!
-</info>', $filename, PHP_EOL, $filename . '.phar')
-        );
+        $this->io->write(sprintf(
+            '<info>File "%s" %s and copy "%s" are written!</info>', $filename, PHP_EOL, $filename . '.phar'
+        ));
     }
 
     /**
-     * @param Tool $tool
-     *
-     * @return bool
+     * @return array
      */
-    private function doReplace(Tool $tool)
+    private function getDecisions()
     {
-        $doReplace = $tool->forceReplace();
-
-        if (true === $this->io->isInteractive()) {
-            $this->io->write('<comment>Checksums are not equal!</comment>');
-            $this->io->write(sprintf(
-                '<comment>Do you want to overwrite the existing file "%s"?</comment>',
-                $tool->getName()
-            ));
-
-            $doReplace = $this->io->askConfirmation('<question>[yes] or [no]?</question>', false);
-        }
-
-        return $doReplace;
-    }
-
-    /**
-     * @param Tool $tool
-     *
-     * @return bool
-     */
-    private function isAccessible(Tool $tool)
-    {
-        if (false === $this->helper->isAccessible($tool->getUrl())) {
-            return false;
-        }
-
-        if (empty($tool->getSignUrl())) {
-            return true;
-        }
-
-        if (false === $this->helper->isAccessible($tool->getSignUrl())) {
-            return false;
-        }
-
-        return true;
+        return [
+            new OnlyDevDecision($this->configuration, $this->helper),
+            new IsAccessibleDecision($this->configuration, $this->helper),
+            new FileAlreadyExistDecision($this->configuration, $this->helper),
+            new IsVerifiedDecision($this->configuration, $this->helper),
+            new DoReplaceDecision($this->configuration, $this->helper, $this->io),
+        ];
     }
 }
