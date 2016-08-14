@@ -14,9 +14,13 @@ class FileAlreadyExistDecision extends AbstractDecision
      *
      * @return bool
      */
-    public function decide(Tool $tool)
+    public function canProceed(Tool $tool)
     {
-        return $this->helper->isFileAlreadyExist($tool->getFilename(), $tool->getUrl());
+        if (false === $this->helper->isFileAlreadyExist($tool->getFilename(), $tool->getUrl())) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

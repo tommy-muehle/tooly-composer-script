@@ -14,7 +14,7 @@ class IsVerifiedDecision extends AbstractDecision
      *
      * @return bool
      */
-    public function decide(Tool $tool)
+    public function canProceed(Tool $tool)
     {
         if (null === $tool->getSignUrl()) {
             return true;

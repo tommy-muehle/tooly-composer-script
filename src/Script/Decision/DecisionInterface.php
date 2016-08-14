@@ -14,7 +14,7 @@ interface DecisionInterface
      *
      * @return bool
      */
-    public function decide(Tool $tool);
+    public function canProceed(Tool $tool);
 
     /**
      * @return string

@@ -11,9 +11,10 @@ class IsAccessibleDecision extends AbstractDecision
 {
     /**
      * @param Tool $tool
-     * @return mixed
+     *
+     * @return bool
      */
-    public function decide(Tool $tool)
+    public function canProceed(Tool $tool)
     {
         if (false === $this->helper->isAccessible($tool->getUrl())) {
             return false;

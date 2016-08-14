@@ -9,7 +9,12 @@ use Tooly\Model\Tool;
  */
 class OnlyDevDecision extends AbstractDecision
 {
-    public function decide(Tool $tool)
+    /**
+     * @param Tool $tool
+     *
+     * @return bool
+     */
+    public function canProceed(Tool $tool)
     {
         if (false === $this->configuration->isDevMode() && true === $tool->isOnlyDev()) {
             return false;
@@ -18,6 +23,9 @@ class OnlyDevDecision extends AbstractDecision
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function getReason()
     {
         return '<comment>... skipped! Only installed in Dev mode.</comment>';

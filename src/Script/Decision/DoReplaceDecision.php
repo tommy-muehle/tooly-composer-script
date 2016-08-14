@@ -34,7 +34,7 @@ class DoReplaceDecision extends AbstractDecision
      *
      * @return bool
      */
-    public function decide(Tool $tool)
+    public function canProceed(Tool $tool)
     {
         $doReplace = $tool->forceReplace();
 

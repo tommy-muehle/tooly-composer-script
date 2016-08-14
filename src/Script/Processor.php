@@ -53,7 +53,7 @@ class Processor
 
         /* @var $decision DecisionInterface */
         foreach ($this->getDecisions() as $decision) {
-            if (true === $decision->decide($tool)) {
+            if (true === $decision->canProceed($tool)) {
                 continue;
             }
 
@@ -73,6 +73,8 @@ class Processor
     }
 
     /**
+     * Each decision can interrupt the download of a tool.
+     *
      * @return array
      */
     private function getDecisions()
