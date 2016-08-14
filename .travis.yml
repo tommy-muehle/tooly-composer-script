@@ -1,5 +1,8 @@
 language: php
 sudo: false
+branches:
+  except:
+    - experimental
 cache:
   directories:
     - $HOME/.composer/cache/files
