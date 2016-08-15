@@ -68,7 +68,10 @@ class Processor
         $this->helper->copyFile($filename, $filename . '.phar');
 
         $this->io->write(sprintf(
-            '<info>File "%s" %s and copy "%s" are written!</info>', $filename, PHP_EOL, $filename . '.phar'
+            '<info>File "%s" %s and copy "%s" are written!</info>',
+            $filename,
+            PHP_EOL,
+            $filename . '.phar'
         ));
     }
 

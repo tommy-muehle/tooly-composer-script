@@ -22,7 +22,11 @@ class ScriptHandler
     public static function installPharTools(Event $event)
     {
         $gpgVerifier = null;
-        $configuration = new Configuration($event->getComposer(), $event->isDevMode(), $event->getIO()->isInteractive());
+        $configuration = new Configuration(
+            $event->getComposer(),
+            $event->isDevMode(),
+            $event->getIO()->isInteractive()
+        );
 
         if (true === class_exists(GPGVerifier::class)) {
             $gpgVerifier = new GPGVerifier;
