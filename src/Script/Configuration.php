@@ -13,7 +13,7 @@ class Configuration
     /**
      * @var array
      */
-    private $data;
+    private $data = [];
 
     /**
      * @var string
@@ -25,6 +25,9 @@ class Configuration
      */
     private $isDevMode = true;
 
+    /**
+     * @var bool
+     */
     private $isInteractiveMode = true;
 
     /**
