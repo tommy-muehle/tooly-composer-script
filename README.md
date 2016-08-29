@@ -19,6 +19,13 @@ with the power of composer.
 
 Optional with [GPG signature verification](https://www.gnupg.org/gph/en/manual/x135.html) for each tool.
 
+## Postcardware
+
+You're free to use this package (it's [MIT-licensed](LICENSE)), but if it makes you happy it would be a great pleasure for me if you send a postcard from your hometown to me.
+My address is: Tommy Muehle, Hepkestr. 177, 01277 Dresden, Germany.
+
+The postcards will get published on [my website](https://tommy-muehle.io).
+
 ## Example
 
 For an quick example look at the [composer.json](composer.json#L57-L76) here.
