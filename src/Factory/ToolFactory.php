@@ -29,7 +29,7 @@ class ToolFactory
 
         return new Tool(
             $name,
-            $directory . DIRECTORY_SEPARATOR . $name,
+            self::getFilename($name, $directory),
             $parameters['url'],
             $parameters['sign-url'],
             $parameters['force-replace'],
@@ -48,9 +48,23 @@ class ToolFactory
         $tools = [];
 
         foreach ($data as $name => $parameters) {
-            $tools[] = self::createTool($name, $directory, $parameters);
+            $tools[$name] = self::createTool($name, $directory, $parameters);
         }
 
         return $tools;
+    }
+
+    /**
+     * @param string $name
+     * @param string $directory
+     *
+     * @return string
+     */
+    private static function getFilename($name, $directory)
+    {
+        $filename = rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $filename .= str_replace('.phar', '', $name) . '.phar';
+
+        return $filename;
     }
 }
