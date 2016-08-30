@@ -41,7 +41,7 @@ class Filesystem
      *
      * @return bool
      */
-    public function copyFile($sourceFile, $file)
+    public function symlinkFile($sourceFile, $file)
     {
         if (false === $this->createDirectory($file)) {
             return false;
@@ -51,7 +51,7 @@ class Filesystem
             return true;
         }
 
-        return copy($sourceFile, $file);
+        return symlink($sourceFile, $file);
     }
 
     /**

@@ -92,10 +92,10 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
         $filesystem
             ->expects($this->once())
-            ->method('copyFile')
+            ->method('symlinkFile')
             ->willReturn(true);
 
         $helper = new Helper($filesystem, new Downloader, new Verifier);
-        $this->assertTrue($helper->copyFile('foo', 'bar'));
+        $this->assertTrue($helper->symlinkFile('foo', 'bar'));
     }
 }

@@ -13,32 +13,22 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
 {
     use PHPMock;
 
-    public function testCanCopyAFile()
+    public function testCanSymlinkAFile()
     {
         vfsStream::setup();
 
         file_put_contents('vfs://root/foo', 'test');
 
-        $filesystem = new Filesystem;
-        $filesystem->copyFile('vfs://root/foo', 'vfs://root/bar');
-
-        $this->assertEquals('test', file_get_contents('vfs://root/bar'));
-    }
-
-    public function testAlreadyExistingFileDoesntCopy()
-    {
-        vfsStream::setup();
-
-        file_put_contents('vfs://root/foo', 'foo');
-        file_put_contents('vfs://root/bar', 'bar');
+        $symlink = $this
+            ->getFunctionMock('Tooly\Script\Helper', 'symlink')
+            ->expects($this->once())
+            ->willReturn(true);
 
         $filesystem = new Filesystem;
-        $filesystem->copyFile('vfs://root/foo', 'vfs://root/bar');
-
-        $this->assertEquals('bar', file_get_contents('vfs://root/bar'));
+        $filesystem->symlinkFile('vfs://root/foo', 'vfs://root/bar');
     }
 
-    public function testCopyFileToNonExistingDirectoryWorks()
+    public function testSymlinkFileToNonExistingDirectoryWorks()
     {
         $root = vfsStream::setup();
 
@@ -51,12 +41,14 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
                 return true;
             });
 
+        $symlink = $this
+            ->getFunctionMock('Tooly\Script\Helper', 'symlink')
+            ->expects($this->once());
+
         file_put_contents('vfs://root/foo.txt', 'foo');
 
         $filesystem = new Filesystem;
-        $filesystem->copyFile('vfs://root/foo.txt', 'vfs://root/bar/bar.txt');
-
-        $this->assertEquals('foo', file_get_contents('vfs://root/bar/bar.txt'));
+        $filesystem->symlinkFile('vfs://root/foo.txt', 'vfs://root/bar/bar.txt');
     }
 
     public function testCannotCreateDirectoryReturnsFalse()
@@ -71,7 +63,11 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
                 return false;
             });
 
+        $symlink = $this
+            ->getFunctionMock('Tooly\Script\Helper', 'symlink')
+            ->expects($this->never());
+
         $this->assertFalse($filesystem->createFile('vfs://root/foo/bar.txt', 'test'));
-        $this->assertFalse($filesystem->copyFile('vfs://root/foo/bar.txt', 'vfs://root/foo/baz.txt'));
+        $this->assertFalse($filesystem->symlinkFile('vfs://root/foo/bar.txt', 'vfs://root/foo/baz.txt'));
     }
 }

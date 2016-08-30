@@ -118,8 +118,8 @@ class Helper
      *
      * @return bool
      */
-    public function copyFile($sourceFile, $file)
+    public function symlinkFile($sourceFile, $file)
     {
-        return $this->filesystem->copyFile($sourceFile, $file);
+        return $this->filesystem->symlinkFile($sourceFile, $file);
     }
 }
