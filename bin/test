@@ -2,7 +2,7 @@
 
 set -e
 
-$(PWD)/bin/phpcs.phar --standard=PSR2 $(PWD)/src -v
-$(PWD)/bin/phpcpd.phar $(PWD)/src
-$(PWD)/bin/phpunit.phar -c $(PWD)/phpunit.xml --verbose --debug
-$(PWD)/bin/security-checker.phar security:check $(PWD)/composer.lock
+./phpcs.phar --standard=PSR2 ../src -v
+./phpcpd.phar ../src
+./phpunit.phar -c ../phpunit.xml --verbose --debug
+./security-checker.phar security:check ../composer.lock
