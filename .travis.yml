@@ -23,7 +23,7 @@ before_install:
 install:
   - composer update --no-interaction --prefer-source
 script:
-  - ./bin/test
+  - bash ./bin/test
   - ./bin/phpunit.phar --coverage-clover build/logs/clover.xml
 after_success:
   - ./bin/test-reporter
