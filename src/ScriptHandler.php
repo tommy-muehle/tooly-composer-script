@@ -35,8 +35,11 @@ class ScriptHandler
         $helper = new Helper(new Filesystem, new Downloader, new Verifier($gpgVerifier));
         $processor = new Processor($event->getIO(), $helper, $configuration);
 
+        $processor->cleanUp();
+
         foreach ($configuration->getTools() as $tool) {
             $processor->process($tool);
+            $processor->symlink($tool);
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace Tooly\Script;
 
 use Composer\IO\IOInterface;
+use Composer\Util\Silencer;
 use Tooly\Script\Decision\DecisionInterface;
 use Tooly\Script\Decision\DoReplaceDecision;
 use Tooly\Script\Decision\FileAlreadyExistDecision;
@@ -45,6 +46,22 @@ class Processor
     }
 
     /**
+     * Removes symlinks from composer's bin-dir and old phar's
+     * from own bin-dir.
+     */
+    public function cleanUp()
+    {
+        $this->removeFromDir(
+            $this->configuration->getComposerBinDirectory()
+        );
+
+        $this->removeFromDir(
+            $this->configuration->getBinDirectory(),
+            array_keys($this->configuration->getTools())
+        );
+    }
+
+    /**
      * @param Tool $tool
      */
     public function process(Tool $tool)
@@ -65,14 +82,23 @@ class Processor
         $filename = $tool->getFilename();
 
         $this->helper->createFile($filename, $data);
-        $this->helper->copyFile($filename, $filename . '.phar');
 
         $this->io->write(sprintf(
-            '<info>File "%s" %s and copy "%s" are written!</info>',
-            $filename,
-            PHP_EOL,
-            $filename . '.phar'
+            '<info>File "%s" successfully downloaded!</info>',
+            basename($filename)
         ));
+    }
+
+    /**
+     * @param Tool $tool
+     */
+    public function symlink(Tool $tool)
+    {
+        $filename = $tool->getFilename();
+        $composerDir = $this->configuration->getComposerBinDirectory();
+        $composerPath = $composerDir . DIRECTORY_SEPARATOR . basename($filename);
+
+        $this->helper->symlinkFile($filename, $composerPath);
     }
 
     /**
@@ -89,5 +115,26 @@ class Processor
             new IsVerifiedDecision($this->configuration, $this->helper),
             new DoReplaceDecision($this->configuration, $this->helper, $this->io),
         ];
+    }
+
+    /**
+     * @param string $dir
+     * @param array  $excludeToolNames
+     */
+    private function removeFromDir($dir, array $excludeToolNames = [])
+    {
+        foreach (scandir($dir) as $entry) {
+            $path = $dir . DIRECTORY_SEPARATOR . $entry;
+
+            if (false === strpos($path, '.phar')) {
+                continue;
+            }
+
+            if (true === in_array(basename($entry, '.phar'), $excludeToolNames)) {
+                continue;
+            }
+
+            Silencer::call('unlink', $path);
+        }
     }
 }
