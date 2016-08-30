@@ -23,7 +23,9 @@ before_install:
 install:
   - composer update --no-interaction --prefer-source
 script:
-  - bash ./bin/test
+  - ./bin/phpcs.phar --standard=PSR2 ./src -v
+  - ./bin/phpcpd.phar ./src
+  - ./bin/security-checker.phar security:check ./composer.lock
   - ./bin/phpunit.phar --coverage-clover build/logs/clover.xml
 after_success:
   - ./bin/test-reporter
