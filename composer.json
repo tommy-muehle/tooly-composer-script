@@ -74,8 +74,5 @@
         "force-replace": true
       }
     }
-  },
-  "config": {
-    "bin-dir": "bin"
   }
 }
