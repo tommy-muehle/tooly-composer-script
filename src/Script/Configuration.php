@@ -21,6 +21,11 @@ class Configuration
     private $binDirectory;
 
     /**
+     * @var string
+     */
+    private $composerBinDirectory;
+
+    /**
      * @var bool
      */
     private $isDevMode = true;
@@ -43,7 +48,8 @@ class Configuration
             $this->data = array_merge([], $extras['tools']);
         }
 
-        $this->binDirectory = $composer->getConfig()->get('bin-dir');
+        $this->binDirectory = realpath(__DIR__ . '/../../bin');
+        $this->composerBinDirectory = $composer->getConfig()->get('bin-dir');
         $this->isDevMode = $isDevMode;
         $this->isInteractiveMode = $isInteractiveMode;
     }
@@ -62,6 +68,22 @@ class Configuration
     public function isInteractiveMode()
     {
         return $this->isInteractiveMode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBinDirectory()
+    {
+        return $this->binDirectory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComposerBinDirectory()
+    {
+        return $this->composerBinDirectory;
     }
 
     /**
