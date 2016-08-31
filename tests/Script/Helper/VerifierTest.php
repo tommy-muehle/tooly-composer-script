@@ -39,6 +39,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $gpgVerifier = $this
             ->getMockBuilder(GPGVerifier::class)
+            ->disableOriginalConstructor()
             ->setMethods(['verify'])
             ->getMock();
 
@@ -54,6 +55,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $gpgVerifier = $this
             ->getMockBuilder(GPGVerifier::class)
+            ->disableOriginalConstructor()
             ->setMethods(['verify'])
             ->getMock();
 
