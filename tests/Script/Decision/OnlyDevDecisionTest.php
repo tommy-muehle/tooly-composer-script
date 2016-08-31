@@ -10,25 +10,8 @@ use Tooly\Script\Helper;
 /**
  * @package Tooly\Tests\Script\Decision
  */
-class OnlyDevDecisionTest extends \PHPUnit_Framework_TestCase
+class OnlyDevDecisionTest extends DecisionTestCase
 {
-    private $helper;
-
-    private $configuration;
-
-    public function setUp()
-    {
-        $this->helper = $this
-            ->getMockBuilder(Helper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->configuration = $this
-            ->getMockBuilder(Configuration::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-    }
-
     public function testOnlyDevToolInNonDevModeReturnsFalse()
     {
         $helper = clone $this->helper;
@@ -98,5 +81,11 @@ class OnlyDevDecisionTest extends \PHPUnit_Framework_TestCase
 
         $decision = new OnlyDevDecision($configuration, $helper);
         $this->assertTrue($decision->canProceed($tool));
+    }
+
+    public function testCanGetReason()
+    {
+        $decision = new OnlyDevDecision($this->configuration, $this->helper);
+        $this->assertRegExp('/comment/', $decision->getReason());
     }
 }
