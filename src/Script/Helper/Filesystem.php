@@ -2,11 +2,26 @@
 
 namespace Tooly\Script\Helper;
 
+use Composer\Util\Filesystem as ComposerFileSystem;
+
 /**
  * @package Tooly\Script\Helper
  */
 class Filesystem
 {
+    /**
+     * @var ComposerFileSystem
+     */
+    private $filesystem;
+
+    /**
+     * @param ComposerFileSystem|null $filesystem
+     */
+    public function __construct(ComposerFileSystem $filesystem = null)
+    {
+        $this->filesystem = $filesystem ?: new ComposerFileSystem();
+    }
+
     /**
      * @param string $filename
      *
@@ -51,7 +66,17 @@ class Filesystem
             return true;
         }
 
-        return symlink($sourceFile, $file);
+        return $this->filesystem->relativeSymlink($sourceFile, $file);
+    }
+
+    /**
+     * @param string $directory
+     *
+     * @return bool
+     */
+    public function removeDirectory($directory)
+    {
+        return $this->filesystem->removeDirectoryPhp($directory);
     }
 
     /**

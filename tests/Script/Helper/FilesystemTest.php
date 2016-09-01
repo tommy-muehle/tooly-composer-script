@@ -11,63 +11,40 @@ use Tooly\Script\Helper\Filesystem;
  */
 class FilesystemTest extends \PHPUnit_Framework_TestCase
 {
-    use PHPMock;
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
 
-    public function testCanSymlinkAFile()
+    /**
+     * @var string
+     */
+    private $testDirectory;
+
+    /**
+     * @var string
+     */
+    private $testFile;
+
+    public function setUp()
     {
-        vfsStream::setup();
-
-        file_put_contents('vfs://root/foo', 'test');
-
-        $symlink = $this
-            ->getFunctionMock('Tooly\Script\Helper', 'symlink')
-            ->expects($this->once())
-            ->willReturn(true);
-
-        $filesystem = new Filesystem;
-        $filesystem->symlinkFile('vfs://root/foo', 'vfs://root/bar');
+        $this->filesystem = new Filesystem;
+        $this->testDirectory = sys_get_temp_dir();
+        $this->testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'file';
     }
 
-    public function testSymlinkFileToNonExistingDirectoryWorks()
+    public function tearDown()
     {
-        $root = vfsStream::setup();
-
-        $mkdir = $this
-            ->getFunctionMock('Tooly\Script\Helper', 'mkdir')
-            ->expects($this->once())
-            ->willReturnCallback(function() use ($root) {
-                $root->addChild(vfsStream::newDirectory('bar'));
-
-                return true;
-            });
-
-        $symlink = $this
-            ->getFunctionMock('Tooly\Script\Helper', 'symlink')
-            ->expects($this->once());
-
-        file_put_contents('vfs://root/foo.txt', 'foo');
-
-        $filesystem = new Filesystem;
-        $filesystem->symlinkFile('vfs://root/foo.txt', 'vfs://root/bar/bar.txt');
+        if (is_dir($this->testDirectory)) {
+            $this->filesystem->removeDirectory($this->testDirectory);
+        }
     }
 
-    public function testCannotCreateDirectoryReturnsFalse()
+    public function testCanRelativeSymlinkAFile()
     {
-        $root = vfsStream::setup();
-        $filesystem = new Filesystem;
+        $symlink = $this->testDirectory . DIRECTORY_SEPARATOR . '/foo/symlink';
 
-        $mkdir = $this
-            ->getFunctionMock('Tooly\Script\Helper', 'mkdir')
-            ->expects($this->exactly(2))
-            ->willReturnCallback(function() {
-                return false;
-            });
-
-        $symlink = $this
-            ->getFunctionMock('Tooly\Script\Helper', 'symlink')
-            ->expects($this->never());
-
-        $this->assertFalse($filesystem->createFile('vfs://root/foo/bar.txt', 'test'));
-        $this->assertFalse($filesystem->symlinkFile('vfs://root/foo/bar.txt', 'vfs://root/foo/baz.txt'));
+        $this->assertTrue($this->filesystem->symlinkFile($this->testFile, $symlink));
+        $this->assertNotEquals('/', substr(readlink($symlink), '0', 1));
     }
 }
