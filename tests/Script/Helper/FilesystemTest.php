@@ -29,7 +29,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->filesystem = new Filesystem;
-        $this->testDirectory = sys_get_temp_dir();
+        $this->testDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'test';
         $this->testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'file';
     }
 
