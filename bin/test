@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-./phpcs.phar --standard=PSR2 ../src -v
-./phpcpd.phar ../src
-./phpunit.phar -c ../phpunit.xml --verbose --debug
-./security-checker.phar security:check ../composer.lock
