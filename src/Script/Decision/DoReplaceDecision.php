@@ -36,7 +36,7 @@ class DoReplaceDecision extends AbstractDecision
      */
     public function canProceed(Tool $tool)
     {
-        if (false === $this->helper->isFileAlreadyExist($tool->getFilename(), null)) {
+        if (false === $this->helper->getFilesystem()->isFileAlreadyExist($tool->getFilename())) {
             return true;
         }
 

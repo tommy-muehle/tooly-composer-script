@@ -78,10 +78,10 @@ class Processor
             return;
         }
 
-        $data = $this->helper->download($tool->getUrl());
+        $data = $this->helper->getDownloader()->download($tool->getUrl());
         $filename = $tool->getFilename();
 
-        $this->helper->createFile($filename, $data);
+        $this->helper->getFilesystem()->createFile($filename, $data);
 
         $this->io->write(sprintf(
             '<info>File "%s" successfully downloaded!</info>',
@@ -98,7 +98,7 @@ class Processor
         $composerDir = $this->configuration->getComposerBinDirectory();
         $composerPath = $composerDir . DIRECTORY_SEPARATOR . basename($filename);
 
-        $this->helper->symlinkFile($filename, $composerPath);
+        $this->helper->getFilesystem()->symlinkFile($filename, $composerPath);
     }
 
     /**

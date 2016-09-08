@@ -16,7 +16,7 @@ class IsAccessibleDecision extends AbstractDecision
      */
     public function canProceed(Tool $tool)
     {
-        if (false === $this->helper->isAccessible($tool->getUrl())) {
+        if (false === $this->helper->getDownloader()->isAccessible($tool->getUrl())) {
             return false;
         }
 
@@ -24,7 +24,7 @@ class IsAccessibleDecision extends AbstractDecision
             return true;
         }
 
-        if (false === $this->helper->isAccessible($tool->getSignUrl())) {
+        if (false === $this->helper->getDownloader()->isAccessible($tool->getSignUrl())) {
             return false;
         }
 

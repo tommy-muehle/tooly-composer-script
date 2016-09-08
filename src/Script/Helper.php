@@ -39,16 +39,6 @@ class Helper
     }
 
     /**
-     * @param string $url
-     *
-     * @return bool
-     */
-    public function isAccessible($url)
-    {
-        return $this->downloader->isAccessible($url);
-    }
-
-    /**
      * @param string $filename
      * @param string $targetFile
      *
@@ -74,14 +64,14 @@ class Helper
      */
     public function isVerified($signatureUrl, $fileUrl)
     {
-        $data = $this->download($fileUrl);
-        $signatureData = $this->download($signatureUrl);
+        $data = $this->downloader->download($fileUrl);
+        $signatureData = $this->downloader->download($signatureUrl);
 
         $tmpFile = rtrim(sys_get_temp_dir(), '/') . '/_tool';
-        $this->createFile($tmpFile, $data);
+        $this->filesystem->createFile($tmpFile, $data);
 
         $tmpSignFile = rtrim(sys_get_temp_dir(), '/') . '/_tool.sign';
-        $this->createFile($tmpSignFile, $signatureData);
+        $this->filesystem->createFile($tmpSignFile, $signatureData);
 
         $result = $this->verifier->checkGPGSignature($tmpSignFile, $tmpFile);
 
@@ -92,34 +82,26 @@ class Helper
     }
 
     /**
-     * @param string $url
-     *
-     * @return string
+     * @return Filesystem
      */
-    public function download($url)
+    public function getFilesystem()
     {
-        return $this->downloader->download($url);
+        return $this->filesystem;
     }
 
     /**
-     * @param string $filename
-     * @param string $content
-     *
-     * @return bool
+     * @return Downloader
      */
-    public function createFile($filename, $content)
+    public function getDownloader()
     {
-        return $this->filesystem->createFile($filename, $content);
+        return $this->downloader;
     }
 
     /**
-     * @param string $sourceFile
-     * @param string $file
-     *
-     * @return bool
+     * @return Verifier
      */
-    public function symlinkFile($sourceFile, $file)
+    public function getVerifier()
     {
-        return $this->filesystem->symlinkFile($sourceFile, $file);
+        return $this->verifier;
     }
 }

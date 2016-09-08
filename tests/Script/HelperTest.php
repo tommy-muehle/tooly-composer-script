@@ -84,7 +84,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($helper->isFileAlreadyExist('foo', 'bar'));
     }
 
-    public function testCanCopyAFile()
+    public function testCanSymlinkAFile()
     {
         $filesystem = $this
             ->getMockBuilder(Filesystem::class)
@@ -96,6 +96,6 @@ class HelperTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
 
         $helper = new Helper($filesystem, new Downloader, new Verifier);
-        $this->assertTrue($helper->symlinkFile('foo', 'bar'));
+        $this->assertTrue($helper->getFilesystem()->symlinkFile('foo', 'bar'));
     }
 }
