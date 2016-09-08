@@ -9,22 +9,9 @@
 [![License](https://poser.pugx.org/tm/tooly-composer-script/license)](https://packagist.org/packages/tm/tooly-composer-script)
 [![Gitter](https://badges.gitter.im/tommy-muehle/tooly-composer-script.svg)](https://gitter.im/tommy-muehle/tooly-composer-script?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-With the tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) aka hook you can manage needed phar files, such as phpunit, in your composer.json.
-Every phar file will be saved in the [composer binary directory](https://getcomposer.org/doc/articles/vendor-binaries.md). 
+With the tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) aka hook you can manage needed PHAR files for quality assurance, such as PHPUnit or phpmd, in your project's composer.json. Every PHAR file will be saved in the [composer binary directory](https://getcomposer.org/doc/articles/vendor-binaries.md). 
 
-## Features
-
-Make sure that all developers in your project get the required tools in the right version 
-with the power of composer.
-
-Optional with [GPG signature verification](https://www.gnupg.org/gph/en/manual/x135.html) for each tool.
-
-## Postcardware
-
-You're free to use this package (it's [MIT-licensed](LICENSE)), but if it makes you happy it would be a great pleasure for me if you send a postcard from your hometown to me.
-My address is: Tommy Muehle, Hepkestr. 177, 01277 Dresden, Germany.
-
-The postcards will get published on [my website](https://tommy-muehle.io).
+So you can be sure that all developers in your project get the required PHAR tools in the needed version with nothing more as composer. Optional with [GPG signature verification](https://www.gnupg.org/gph/en/manual/x135.html) for each tool.
 
 ## Example
 
@@ -122,6 +109,13 @@ But is also useful if some require-dev library has one of the tools as own requi
 
 This parameter means that this phar is only needed in developing mode.
 So the command ```composer [install|update] --no-dev``` ignores this phar tool.
+
+## Postcardware
+
+You're free to use this package (it's [MIT-licensed](LICENSE)), but if it makes you happy it would be a great pleasure for me if you send a postcard from your hometown to me.
+My address is: Tommy Muehle, Hepkestr. 177, 01277 Dresden, Germany.
+
+The postcards will get published on [my website](https://tommy-muehle.io).
 
 ## A note to PhpStorm or other IDE users
 
