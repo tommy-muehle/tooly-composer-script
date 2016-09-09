@@ -47,56 +47,26 @@ execute() {
 docker-compose build &>/dev/null
 docker-compose up -d &>/dev/null
 
-printf "\033c"
-print_info "Run checks with PHP $(docker-compose run php-5.6 php -r 'echo phpversion();')"
+VERSIONS=( "php-5.6" "php-7.0" "php-7.1" "hhvm" )
+for VERSION in "${VERSIONS[@]}"
+do
+    printf "\033c"
+    print_info "Run checks with PHP $(docker-compose run $VERSION php -r 'echo phpversion();')"
 
-print_task "Run security-checker"
-execute "docker-compose run php-5.6 php bin/security-checker.phar security:check ./composer.lock"
+    if [ ! $VERSION == "hhvm" ]; then
+        print_task "Run security-checker"
+        execute "docker-compose run $VERSION php bin/security-checker.phar security:check ./composer.lock"
 
-print_task "Check PSR2 codestyle"
-execute "docker-compose run php-5.6 php bin/phpcs.phar --standard=PSR2 ./src -v"
+        print_task "Check PSR2 codestyle"
+        execute "docker-compose run $VERSION php bin/phpcs.phar --standard=PSR2 ./src -v"
 
-print_task "Run copy paste detection"
-execute "docker-compose run php-5.6 php bin/phpcpd.phar ./src"
+        print_task "Run copy paste detection"
+        execute "docker-compose run $VERSION php bin/phpcpd.phar ./src"
+    fi
 
-print_task "Run tests"
-execute "docker-compose run php-5.6 php bin/phpunit.phar"
-
-printf "\033c"
-print_info "Run checks with PHP $(docker-compose run php-7.0 php -r 'echo phpversion();')"
-
-print_task "Run security-checker"
-execute "docker-compose run php-7.0 php bin/security-checker.phar security:check ./composer.lock"
-
-print_task "Check PSR2 codestyle"
-execute "docker-compose run php-7.0 php bin/phpcs.phar --standard=PSR2 ./src -v"
-
-print_task "Run copy paste detection"
-execute "docker-compose run php-7.0 php bin/phpcpd.phar ./src"
-
-print_task "Run tests"
-execute "docker-compose run php-7.0 php bin/phpunit.phar"
-
-printf "\033c"
-print_info "Run checks with PHP $(docker-compose run php-7.1 php -r 'echo phpversion();')"
-
-print_task "Run security-checker"
-execute "docker-compose run php-7.1 php bin/security-checker.phar security:check ./composer.lock"
-
-print_task "Check PSR2 codestyle"
-execute "docker-compose run php-7.1 php bin/phpcs.phar --standard=PSR2 ./src -v"
-
-print_task "Run copy paste detection"
-execute "docker-compose run php-7.1 php bin/phpcpd.phar ./src"
-
-print_task "Run tests"
-execute "docker-compose run php-7.1 php bin/phpunit.phar"
-
-printf "\033c"
-print_info "Run checks with hhvm $(docker-compose run hhvm php -r 'echo phpversion();')"
-
-print_task "Run tests"
-execute "docker-compose run hhvm php bin/phpunit.phar"
+    print_task "Run tests"
+    execute "docker-compose run $VERSION php bin/phpunit.phar"
+done
 
 docker-compose stop &>/dev/null
 docker-compose rm -f &>/dev/null
