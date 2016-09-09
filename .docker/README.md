@@ -37,3 +37,7 @@ Run security-checker                                                            
 Check PSR2 codestyle                                                            [ FAIL ]
 Failed command: docker-compose run php-5.6 php bin/phpcs.phar --standard=PSR2 ./src -v[ FAIL ]
 ```
+
+## Source
+
+The repository for the basic setup can be found [here](https://github.com/tommy-muehle/docker-php-test-compilation).
