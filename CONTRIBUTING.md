@@ -5,6 +5,7 @@
 * Fork the project
 * Make your bug fix or feature addition
 * Add tests for it. This is important so we don't break it in a future version unintentionally
+* (optional) Check your changes locally. See [here](.docker/README.md) for more information. 
 * Send a pull request
 
 ## Attention

@@ -1,0 +1,18 @@
+version: '2'
+services:
+  php-5.6:
+    build: ./php-5.6
+    volumes:
+      - ./../:/app
+  php-7.0:
+    build: ./php-7.0
+    volumes:
+      - ./../:/app
+  php-7.1:
+    build: ./php-7.1
+    volumes:
+      - ./../:/app
+  hhvm:
+    build: ./hhvm
+    volumes:
+      - ./../:/app
