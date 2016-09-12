@@ -23,6 +23,7 @@ class Downloader
      * @param string $url
      *
      * @return string
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function download($url)
     {

@@ -120,6 +120,8 @@ class Processor
     /**
      * @param string $dir
      * @param array  $excludeToolNames
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function removeFromDir($dir, array $excludeToolNames = [])
     {
