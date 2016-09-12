@@ -60,6 +60,9 @@ do
         print_task "Check PSR2 codestyle"
         execute "docker-compose run $VERSION php bin/phpcs.phar --standard=PSR2 ./src -v"
 
+        print_task "Check phpmd rules"
+        execute "docker-compose run $VERSION php bin/phpmd.phar ./src text ./phpmd.xml "
+
         print_task "Run copy paste detection"
         execute "docker-compose run $VERSION php bin/phpcpd.phar ./src"
     fi
