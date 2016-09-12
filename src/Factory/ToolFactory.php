@@ -27,14 +27,22 @@ class ToolFactory
 
         $parameters = array_merge($defaults, $parameters);
 
-        return new Tool(
+        $tool = new Tool(
             $name,
             self::getFilename($name, $directory),
             $parameters['url'],
-            $parameters['sign-url'],
-            $parameters['force-replace'],
-            $parameters['only-dev']
+            $parameters['sign-url']
         );
+
+        if (true === $parameters['force-replace']) {
+            $tool->activateForceReplace();
+        }
+
+        if (false === $parameters['only-dev']) {
+            $tool->disableOnlyDev();
+        }
+
+        return $tool;
     }
 
     /**

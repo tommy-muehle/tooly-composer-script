@@ -42,17 +42,31 @@ class Tool
      * @param string $filename
      * @param string $url
      * @param string $signUrl
-     * @param bool   $forceReplace
-     * @param bool   $onlyDev
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    public function __construct($name, $filename, $url, $signUrl = null, $forceReplace = false, $onlyDev = true)
+    public function __construct($name, $filename, $url, $signUrl = null)
     {
         $this->name = $name;
         $this->filename = $filename;
         $this->url = $url;
         $this->signUrl = $signUrl;
-        $this->forceReplace = $forceReplace;
-        $this->onlyDev = $onlyDev;
+    }
+
+    /**
+     * @return void
+     */
+    public function activateForceReplace()
+    {
+        $this->forceReplace = true;
+    }
+
+    /**
+     * @return void
+     */
+    public function disableOnlyDev()
+    {
+        $this->onlyDev = false;
     }
 
     /**
