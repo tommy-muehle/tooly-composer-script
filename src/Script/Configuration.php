@@ -26,21 +26,10 @@ class Configuration
     private $composerBinDirectory;
 
     /**
-     * @var bool
-     */
-    private $isDevMode = true;
-
-    /**
-     * @var bool
-     */
-    private $isInteractiveMode = true;
-
-    /**
      * @param Composer $composer
-     * @param bool     $isDevMode
-     * @param bool     $isInteractiveMode
+     * @param Mode     $mode
      */
-    public function __construct(Composer $composer, $isDevMode = true, $isInteractiveMode = true)
+    public function __construct(Composer $composer, Mode $mode)
     {
         $extras = $composer->getPackage()->getExtra();
 
@@ -48,10 +37,9 @@ class Configuration
             $this->data = array_merge([], $extras['tools']);
         }
 
+        $this->mode = $mode;
         $this->binDirectory = realpath(__DIR__ . '/../../bin');
         $this->composerBinDirectory = $composer->getConfig()->get('bin-dir');
-        $this->isDevMode = $isDevMode;
-        $this->isInteractiveMode = $isInteractiveMode;
     }
 
     /**
@@ -59,7 +47,7 @@ class Configuration
      */
     public function isDevMode()
     {
-        return $this->isDevMode;
+        return $this->mode->isDev();
     }
 
     /**
@@ -67,7 +55,7 @@ class Configuration
      */
     public function isInteractiveMode()
     {
-        return $this->isInteractiveMode;
+        return $this->mode->isInteractive();
     }
 
     /**
@@ -88,6 +76,7 @@ class Configuration
 
     /**
      * @return array
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getTools()
     {

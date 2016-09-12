@@ -6,6 +6,7 @@ use Composer\Composer;
 use Composer\Config;
 use Composer\Package\Package;
 use Tooly\Script\Configuration;
+use Tooly\Script\Mode;
 
 /**
  * @package Tooly\Tests\Script
@@ -14,7 +15,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     public function testIfNoToolsSetEmptyToolSetIsGiven()
     {
-        $configuration = new Configuration($this->getPreparedComposerInstance([], ''));
+        $configuration = new Configuration($this->getPreparedComposerInstance([], ''), new Mode(true, false));
         $this->assertCount(0, $configuration->getTools());
     }
 
@@ -28,31 +29,37 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $configuration = new Configuration($this->getPreparedComposerInstance($extra, ''));
+        $configuration = new Configuration($this->getPreparedComposerInstance($extra, ''), new Mode);
         $this->assertCount(1, $configuration->getTools());
     }
 
     public function testCanCheckDevMode()
     {
-        $configuration = new Configuration($this->getPreparedComposerInstance([], ''));
+        $configuration = new Configuration($this->getPreparedComposerInstance([], ''), new Mode);
         $this->assertTrue($configuration->isDevMode());
     }
 
     public function testCanSetDevMode()
     {
-        $configuration = new Configuration($this->getPreparedComposerInstance([], ''), false);
+        $mode = new Mode;
+        $mode->setNoDev();
+
+        $configuration = new Configuration($this->getPreparedComposerInstance([], ''), $mode);
         $this->assertFalse($configuration->isDevMode());
     }
 
     public function testCanCheckInteractiveMode()
     {
-        $configuration = new Configuration($this->getPreparedComposerInstance([], ''));
+        $configuration = new Configuration($this->getPreparedComposerInstance([], ''), new Mode);
         $this->assertTrue($configuration->isInteractiveMode());
     }
 
     public function testCanSetInteractiveMode()
     {
-        $configuration = new Configuration($this->getPreparedComposerInstance([], ''), true, false);
+        $mode = new Mode;
+        $mode->setNonInteractive();
+
+        $configuration = new Configuration($this->getPreparedComposerInstance([], ''), $mode);
         $this->assertFalse($configuration->isInteractiveMode());
     }
 
