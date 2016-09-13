@@ -93,6 +93,10 @@ class Processor
      */
     public function symlink(Tool $tool)
     {
+        if (true === $tool->isOnlyDev() && false === $this->configuration->isDevMode()) {
+            return;
+        }
+
         $filename = $tool->getFilename();
         $composerDir = $this->configuration->getComposerBinDirectory();
         $composerPath = $composerDir . DIRECTORY_SEPARATOR . basename($filename);

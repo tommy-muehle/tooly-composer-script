@@ -63,4 +63,21 @@ class SymlinkTest extends \PHPUnit_Framework_TestCase
         $processor = new Processor($this->io, $this->helper, $this->configuration);
         $processor->symlink($tool);
     }
+
+    public function testNoSymlinkCreatedIfOnlyDevToolInNoDevMode()
+    {
+        $this->configuration
+            ->expects($this->once())
+            ->method('isDevMode')
+            ->willReturn(false);
+
+        $this->helper
+            ->expects($this->never())
+            ->method('getFilesystem');
+
+        $tool = ToolFactory::createTool('tool', __DIR__, []);
+
+        $processor = new Processor($this->io, $this->helper, $this->configuration);
+        $processor->symlink($tool);
+    }
 }
