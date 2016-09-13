@@ -22,13 +22,13 @@ before_install:
 install:
   - composer update --no-interaction
 script:
-  - ./bin/phpcs.phar --standard=PSR2 ./src -v
-  - ./bin/phpcpd.phar ./src
-  - ./bin/security-checker.phar security:check ./composer.lock
-  - ./bin/phpmd.phar ./src text ./phpmd.xml
-  - ./bin/phpunit.phar --coverage-clover build/logs/clover.xml
+  - ./vendor/bin/phpcs.phar --standard=PSR2 ./src -v
+  - ./vendor/bin/phpcpd.phar ./src
+  - ./vendor/bin/security-checker.phar security:check ./composer.lock
+  - ./vendor/bin/phpmd.phar ./src text ./phpmd.xml
+  - ./vendor/bin/phpunit.phar --coverage-clover build/logs/clover.xml
 after_success:
-  - ./bin/test-reporter
+  - ./vendor/bin/test-reporter
 notifications:
   email: false
   webhooks:
