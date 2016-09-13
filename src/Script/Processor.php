@@ -3,7 +3,6 @@
 namespace Tooly\Script;
 
 use Composer\IO\IOInterface;
-use Composer\Util\Silencer;
 use Tooly\Script\Decision\DecisionInterface;
 use Tooly\Script\Decision\DoReplaceDecision;
 use Tooly\Script\Decision\FileAlreadyExistDecision;
@@ -120,8 +119,6 @@ class Processor
     /**
      * @param string $dir
      * @param array  $excludeToolNames
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function removeFromDir($dir, array $excludeToolNames = [])
     {
@@ -136,7 +133,7 @@ class Processor
                 continue;
             }
 
-            Silencer::call('unlink', $path);
+            $this->helper->getFilesystem()->remove($path);
         }
     }
 }

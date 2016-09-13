@@ -3,6 +3,7 @@
 namespace Tooly\Script\Helper;
 
 use Composer\Util\Filesystem as ComposerFileSystem;
+use Composer\Util\Silencer;
 
 /**
  * @package Tooly\Script\Helper
@@ -37,6 +38,7 @@ class Filesystem
      * @param string $content
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function createFile($filename, $content)
     {
@@ -44,8 +46,8 @@ class Filesystem
             return false;
         }
 
-        file_put_contents($filename, $content);
-        chmod($filename, 0755);
+        Silencer::call('file_put_contents', $filename, $content);
+        Silencer::call('chmod', $filename, 0755);
 
         return true;
     }
@@ -80,9 +82,21 @@ class Filesystem
     }
 
     /**
+     * @param string $file
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function remove($file)
+    {
+        return Silencer::call('unlink', $file);
+    }
+
+    /**
      * @param string $filename
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function createDirectory($filename)
     {
@@ -92,6 +106,6 @@ class Filesystem
             return true;
         }
 
-        return mkdir($directory, 0777, true);
+        return Silencer::call('mkdir', $directory, 0777, true);
     }
 }

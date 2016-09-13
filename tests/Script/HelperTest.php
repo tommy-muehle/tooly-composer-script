@@ -98,4 +98,16 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $helper = new Helper($filesystem, new Downloader, new Verifier);
         $this->assertTrue($helper->getFilesystem()->symlinkFile('foo', 'bar'));
     }
+
+    public function testCanGetDownloader()
+    {
+        $helper = new Helper(new Filesystem, new Downloader, new Verifier);
+        $this->assertInstanceOf(Downloader::class, $helper->getDownloader());
+    }
+
+    public function testCanGetVerifier()
+    {
+        $helper = new Helper(new Filesystem, new Downloader, new Verifier);
+        $this->assertInstanceOf(Verifier::class, $helper->getVerifier());
+    }
 }
