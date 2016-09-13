@@ -3,7 +3,6 @@
 namespace Tooly\Script;
 
 use Composer\IO\IOInterface;
-use Tooly\Script\Decision\DecisionInterface;
 use Tooly\Script\Decision\DoReplaceDecision;
 use Tooly\Script\Decision\FileAlreadyExistDecision;
 use Tooly\Script\Decision\IsAccessibleDecision;
@@ -67,7 +66,7 @@ class Processor
     {
         $this->io->write(sprintf('<comment>Process tool "%s" ...</comment>', $tool->getName()));
 
-        /* @var $decision DecisionInterface */
+        /* @var $decision \Tooly\Script\Decision\DecisionInterface */
         foreach ($this->getDecisions() as $decision) {
             if (true === $decision->canProceed($tool)) {
                 continue;
