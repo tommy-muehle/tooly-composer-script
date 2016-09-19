@@ -47,7 +47,7 @@ execute() {
 docker-compose build &>/dev/null
 docker-compose up -d &>/dev/null
 
-VERSIONS=( "php-5.6" "php-7.0" "php-7.1" "hhvm" )
+VERSIONS=( "php-5.6" "php-7.0" "php-7.1" "nightly" "hhvm" )
 for VERSION in "${VERSIONS[@]}"
 do
     printf "\033c"
