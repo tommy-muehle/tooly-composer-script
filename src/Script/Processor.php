@@ -49,10 +49,13 @@ class Processor
      */
     public function cleanUp()
     {
-        $this->removeFromDir(
-            $this->configuration->getComposerBinDirectory()
-        );
+        $composerBinDirectory = $this->configuration->getComposerBinDirectory();
 
+        if (false === is_dir($composerBinDirectory)) {
+            $this->helper->getFilesystem()->createDirectory($composerBinDirectory);
+        }
+
+        $this->removeFromDir($composerBinDirectory);
         $this->removeFromDir(
             $this->configuration->getBinDirectory(),
             array_keys($this->configuration->getTools())

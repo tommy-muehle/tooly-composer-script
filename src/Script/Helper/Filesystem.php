@@ -98,7 +98,7 @@ class Filesystem
      * @return bool
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    private function createDirectory($filename)
+    public function createDirectory($filename)
     {
         $directory = dirname($filename);
 
