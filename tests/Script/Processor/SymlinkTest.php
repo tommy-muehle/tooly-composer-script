@@ -1,6 +1,6 @@
 <?php
 
-namespace Tooly\Tests\Scrip\Processor;
+namespace Tooly\Tests\Script\Processor;
 
 use Composer\IO\ConsoleIO;
 use Tooly\Factory\ToolFactory;

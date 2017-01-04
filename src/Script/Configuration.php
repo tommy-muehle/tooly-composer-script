@@ -26,6 +26,11 @@ class Configuration
     private $composerBinDirectory;
 
     /**
+     * @var Mode
+     */
+    private $mode;
+
+    /**
      * @param Composer $composer
      * @param Mode     $mode
      */
