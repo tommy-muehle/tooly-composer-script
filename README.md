@@ -10,22 +10,29 @@
 [![License](https://poser.pugx.org/tm/tooly-composer-script/license)](https://packagist.org/packages/tm/tooly-composer-script)
 [![Gitter](https://badges.gitter.im/tommy-muehle/tooly-composer-script.svg)](https://gitter.im/tommy-muehle/tooly-composer-script?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-With the tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) aka hook you can manage needed PHAR files for quality assurance, such as PHPUnit or phpmd, in your project's composer.json. Every PHAR file will be saved in the [composer binary directory](https://getcomposer.org/doc/articles/vendor-binaries.md). 
+With tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) you can version needed PHAR files in your project's composer.json without adding them directly to a VCS, 
+* to save disk space 
+* to be sure that all developers in your project get the required toolchain
+* to prepare a CI/CD System
+* (optional) to automatically check the [GPG signature verification](https://www.gnupg.org/gph/en/manual/x135.html) for each tool 
 
-So you can be sure that all developers in your project get the required PHAR tools in the needed version with nothing more as composer. Optional with [GPG signature verification](https://www.gnupg.org/gph/en/manual/x135.html) for each tool.
+Every PHAR file will be saved in the [composer binary directory](https://getcomposer.org/doc/articles/vendor-binaries.md). 
 
 ## Example
 
-For an quick example look at the [composer.json](composer.json#L57-L76) here.
+An real example can be found [here](composer.json#L57-L76).
+
+## Requirements
+
+* PHP >= 5.6
+* Composer
  
 ## Install
 
-To use the script just do the following single command:
-
-*Note: There are no further dependencies in this library. Only PHP.*
+To use the script execute the following command:
 
 ```
-composer require tm/tooly-composer-script
+composer require --dev tm/tooly-composer-script
 ```
 
 Then add the script in the composer.json under *"scripts"* with the event names you want to trigger.
@@ -110,6 +117,8 @@ But is also useful if some require-dev library has one of the tools as own requi
 
 This parameter means that this phar is only needed in developing mode.
 So the command ```composer [install|update] --no-dev``` ignores this phar tool.
+
+**Note: Therefore tooly must be a [no-dev requirement](https://getcomposer.org/doc/04-schema.md#require)** 
 
 ## Postcardware
 
