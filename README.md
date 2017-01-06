@@ -11,7 +11,7 @@
 [![Gitter](https://badges.gitter.im/tommy-muehle/tooly-composer-script.svg)](https://gitter.im/tommy-muehle/tooly-composer-script?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 With tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) you can version needed PHAR files in your project's composer.json without adding them directly to a VCS, 
-* to save disk space 
+* to save disk space at vcs repository
 * to be sure that all developers in your project get the required toolchain
 * to prepare a CI/CD System
 * (optional) to automatically check the [GPG signature verification](https://www.gnupg.org/gph/en/manual/x135.html) for each tool 
