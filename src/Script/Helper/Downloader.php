@@ -13,6 +13,7 @@ class Downloader
      * @param string $url
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function isAccessible($url)
     {
