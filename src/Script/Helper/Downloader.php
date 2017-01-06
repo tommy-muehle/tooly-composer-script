@@ -16,7 +16,11 @@ class Downloader
      */
     public function isAccessible($url)
     {
-        return is_resource(@fopen($url, 'r'));
+        $context = StreamContextFactory::getContext($url, [
+            'http' => ['timeout' => 5]
+        ]);
+
+        return is_resource(@fopen($url, 'r', null, $context));
     }
 
     /**
