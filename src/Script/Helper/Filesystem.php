@@ -42,7 +42,7 @@ class Filesystem
      */
     public function createFile($filename, $content)
     {
-        if (false === $this->createDirectory($filename)) {
+        if (false === $this->createDirectory(dirname($filename))) {
             return false;
         }
 
@@ -60,7 +60,7 @@ class Filesystem
      */
     public function symlinkFile($sourceFile, $file)
     {
-        if (false === $this->createDirectory($file)) {
+        if (false === $this->createDirectory(dirname($file))) {
             return false;
         }
 
@@ -93,16 +93,14 @@ class Filesystem
     }
 
     /**
-     * @param string $filename
+     * @param string $directory
      *
      * @return bool
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function createDirectory($filename)
+    public function createDirectory($directory)
     {
-        $directory = dirname($filename);
-
-        if (true === file_exists($directory)) {
+        if (true === is_dir($directory)) {
             return true;
         }
 
