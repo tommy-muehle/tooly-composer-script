@@ -13,13 +13,10 @@ class Downloader
      * @param string $url
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function isAccessible($url)
     {
-        $context = StreamContextFactory::getContext($url, [
-            'http' => ['timeout' => 5]
-        ]);
+        $context = $this->getContext($url);
 
         return is_resource(@fopen($url, 'r', null, $context));
     }
@@ -28,12 +25,24 @@ class Downloader
      * @param string $url
      *
      * @return string
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function download($url)
     {
-        $context = StreamContextFactory::getContext($url);
+        $context = $this->getContext($url);
 
         return file_get_contents($url, false, $context);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return resource
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    private function getContext($url)
+    {
+        return StreamContextFactory::getContext($url, [
+            'http' => ['timeout' => 5]
+        ]);
     }
 }
