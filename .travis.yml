@@ -22,7 +22,7 @@ install:
 script:
   - ./vendor/bin/phpcs.phar --standard=PSR2 ./src -v
   - ./vendor/bin/phpcpd.phar ./src
-  - ./vendor/bin/security-checker.phar security:check ./composer.lock
+  - ./vendor/bin/security-checker.phar security:check ./composer.lock --end-point=http://security.sensiolabs.org/check_lock
   - ./vendor/bin/phpmd.phar ./src text ./phpmd.xml
   - ./vendor/bin/phpunit.phar --coverage-clover build/logs/clover.xml
 after_success:
