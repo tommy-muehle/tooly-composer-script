@@ -16,7 +16,3 @@ services:
     build: ./nightly
     volumes:
       - ./../:/app
-  hhvm:
-    build: ./hhvm
-    volumes:
-      - ./../:/app
