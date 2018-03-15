@@ -131,6 +131,11 @@ class Processor
         // Get the tools managed by tooly
         $tools = $this->configuration->getTools();
 
+        // If no tools exist, there is nothing more to do here.
+        if (0 === count($tools)) {
+            return;
+        }
+
         foreach (scandir($dir) as $entry) {
             $path = $dir . DIRECTORY_SEPARATOR . $entry;
 
