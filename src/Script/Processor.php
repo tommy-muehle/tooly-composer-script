@@ -128,11 +128,22 @@ class Processor
      */
     private function removeFromDir($dir, array $excludeToolNames = [])
     {
+        // Get the tools managed by tooly
+        $tools = $this->configuration->getTools();
+
         foreach (scandir($dir) as $entry) {
             $path = $dir . DIRECTORY_SEPARATOR . $entry;
 
             if (false === strpos($path, '.phar')) {
                 continue;
+            }
+
+            /* @var $tool Tool */
+            foreach ($tools as $tool) {
+                // Check if the binary is a managed one by tooly, if not - don't remove it
+                if (basename($tool->getFilename()) !== basename($path)) {
+                    continue 2;
+                }
             }
 
             if (true === in_array(basename($entry, '.phar'), $excludeToolNames)) {
