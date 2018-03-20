@@ -11,6 +11,7 @@ matrix:
     - php: 5.6
     - php: 7.0
     - php: 7.1
+    - php: 7.2
     - php: nightly
   allow_failures:
     - php: nightly
@@ -20,10 +21,6 @@ before_install:
 install:
   - composer update --no-interaction
 script:
-  - ./vendor/bin/phpcs.phar --standard=PSR2 ./src -v
-  - ./vendor/bin/phpcpd.phar ./src
-  - ./vendor/bin/security-checker.phar security:check ./composer.lock --end-point=http://security.sensiolabs.org/check_lock
-  - ./vendor/bin/phpmd.phar ./src text ./phpmd.xml
   - ./vendor/bin/phpunit.phar --coverage-clover build/logs/clover.xml
 after_success:
   - ./vendor/bin/test-reporter
