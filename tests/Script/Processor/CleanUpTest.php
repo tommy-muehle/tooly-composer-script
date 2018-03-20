@@ -72,9 +72,8 @@ class CleanupTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $this->helper
-            ->expects($this->once())
-            ->method('getFilesystem')
-            ->willReturn(new Filesystem);
+            ->expects($this->never())
+            ->method('getFilesystem');
 
         $processor = $this->getProcessor();
         $processor->cleanUp();
