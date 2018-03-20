@@ -44,6 +44,7 @@
   },
   "require-dev": {
     "composer/composer": "1.*",
+    "symfony/console": "^3.0",
     "mikey179/vfsstream": "1.6.*",
     "tm/gpg-verifier": "1.*",
     "php-mock/php-mock-phpunit": "1.1.*",
