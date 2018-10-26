@@ -38,6 +38,11 @@ class Tool
     private $onlyDev = true;
 
     /**
+     * @var bool
+     */
+    private $rename = false;
+
+    /**
      * @param string $name
      * @param string $filename
      * @param string $url
@@ -115,5 +120,21 @@ class Tool
     public function forceReplace()
     {
         return $this->forceReplace;
+    }
+
+    /**
+     * @return void
+     */
+    public function setNameToToolKey()
+    {
+        $this->rename = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function renameToConfigKey()
+    {
+        return $this->rename;
     }
 }

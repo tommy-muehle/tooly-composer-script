@@ -23,6 +23,7 @@ class ToolFactory
             'sign-url' => null,
             'only-dev' => true,
             'force-replace' => false,
+            'rename' => false,
         ];
 
         $parameters = array_merge($defaults, $parameters);
@@ -40,6 +41,10 @@ class ToolFactory
 
         if (false === $parameters['only-dev']) {
             $tool->disableOnlyDev();
+        }
+
+        if (true === $parameters['rename']) {
+            $tool->setNameToToolKey();
         }
 
         return $tool;
