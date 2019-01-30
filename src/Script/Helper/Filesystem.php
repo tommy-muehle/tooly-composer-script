@@ -3,6 +3,7 @@
 namespace Tooly\Script\Helper;
 
 use Composer\Util\Filesystem as ComposerFileSystem;
+use Composer\Util\Platform;
 use Composer\Util\Silencer;
 
 /**
@@ -68,7 +69,14 @@ class Filesystem
             return true;
         }
 
-        return $this->filesystem->relativeSymlink($sourceFile, $file);
+        if (Platform::isWindows()) {
+            $sourceFile = $this->filesystem->normalizePath($sourceFile);
+            $file = $this->filesystem->normalizePath($file);
+
+            return Silencer::call('copy', $sourceFile, $file);
+        } else {
+            return $this->filesystem->relativeSymlink($sourceFile, $file);
+        }
     }
 
     /**
