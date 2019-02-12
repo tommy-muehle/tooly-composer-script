@@ -1,4 +1,4 @@
-VERSIONS = php-5.6 php-7.0 php-7.1 nightly
+VERSIONS = php-5.6 php-7.0 php-7.1 php-7.2 php-7.3 nightly
 
 all: build test clean
 

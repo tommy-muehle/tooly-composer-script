@@ -12,6 +12,14 @@ services:
     build: ./php-7.1
     volumes:
       - ./../:/app
+  php-7.2:
+    build: ./php-7.2
+    volumes:
+      - ./../:/app
+  php-7.3:
+    build: ./php-7.3
+    volumes:
+      - ./../:/app
   nightly:
     build: ./nightly
     volumes:
