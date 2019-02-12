@@ -56,7 +56,7 @@
   "extra": {
     "tools": {
       "phpunit": {
-        "url": "https://phar.phpunit.de/phpunit-5.5.0.phar"
+        "url": "https://phar.phpunit.de/phpunit-5.7.27.phar"
       },
       "phpcpd": {
         "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar"
