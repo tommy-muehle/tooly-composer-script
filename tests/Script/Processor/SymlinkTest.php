@@ -61,7 +61,7 @@ class SymlinkTest extends \PHPUnit_Framework_TestCase
         $tool = ToolFactory::createTool('tool', __DIR__, []);
 
         $processor = new Processor($this->io, $this->helper, $this->configuration);
-        $processor->symlink($tool);
+        $processor->symlinkOrCopy($tool);
     }
 
     public function testNoSymlinkCreatedIfOnlyDevToolInNoDevMode()
@@ -78,6 +78,6 @@ class SymlinkTest extends \PHPUnit_Framework_TestCase
         $tool = ToolFactory::createTool('tool', __DIR__, []);
 
         $processor = new Processor($this->io, $this->helper, $this->configuration);
-        $processor->symlink($tool);
+        $processor->symlinkOrCopy($tool);
     }
 }

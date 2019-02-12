@@ -3,6 +3,7 @@
 namespace Tooly\Script;
 
 use Composer\IO\IOInterface;
+use Composer\Util\Platform;
 use Tooly\Script\Decision\DoReplaceDecision;
 use Tooly\Script\Decision\FileAlreadyExistDecision;
 use Tooly\Script\Decision\IsAccessibleDecision;
@@ -93,7 +94,7 @@ class Processor
     /**
      * @param Tool $tool
      */
-    public function symlink(Tool $tool)
+    public function symlinkOrCopy(Tool $tool)
     {
         if (true === $tool->isOnlyDev() && false === $this->configuration->isDevMode()) {
             return;
@@ -103,7 +104,11 @@ class Processor
         $composerDir = $this->configuration->getComposerBinDirectory();
         $composerPath = $composerDir . DIRECTORY_SEPARATOR . basename($filename);
 
-        $this->helper->getFilesystem()->symlinkFile($filename, $composerPath);
+        if (Platform::isWindows()) {
+            $this->helper->getFilesystem()->copyFile($filename, $composerPath);
+        } else {
+            $this->helper->getFilesystem()->symlinkFile($filename, $composerPath);
+        }
     }
 
     /**

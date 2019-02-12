@@ -72,6 +72,29 @@ class Filesystem
     }
 
     /**
+     * @param $sourceFile
+     * @param $file
+     *
+     * @return bool
+     */
+    public function copyFile($sourceFile, $file)
+    {
+        if (!$this->createDirectory(dirname($file))) {
+            return false;
+        }
+
+        if (!$this->isFileAlreadyExist($file)) {
+            return true;
+        }
+
+        return Silencer::call(
+            'copy',
+            $this->filesystem->normalizePath($sourceFile),
+            $this->filesystem->normalizePath($file)
+        );
+    }
+
+    /**
      * @param string $directory
      *
      * @return bool

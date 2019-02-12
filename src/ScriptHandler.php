@@ -46,7 +46,7 @@ class ScriptHandler
 
         foreach ($configuration->getTools() as $tool) {
             $processor->process($tool);
-            $processor->symlink($tool);
+            $processor->symlinkOrCopy($tool);
         }
     }
 }
