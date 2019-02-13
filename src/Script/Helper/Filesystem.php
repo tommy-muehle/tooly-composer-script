@@ -83,7 +83,7 @@ class Filesystem
             return false;
         }
 
-        if (!$this->isFileAlreadyExist($file)) {
+        if ($this->isFileAlreadyExist($file)) {
             return true;
         }
 
