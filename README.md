@@ -119,13 +119,6 @@ So the command ```composer [install|update] --no-dev``` ignores this phar tool.
 
 **Note: Therefore tooly must be a [no-dev requirement](https://getcomposer.org/doc/04-schema.md#require)** 
 
-## Postcardware
-
-You're free to use this package (it's [MIT-licensed](LICENSE)), but if it makes you happy it would be a great pleasure for me if you send a postcard from your hometown to me.
-My address is: Tommy Muehle, Hepkestr. 177, 01277 Dresden, Germany.
-
-The postcards will get published on [my website](https://tommy-muehle.io).
-
 ## A note to PhpStorm or other IDE users
 
 To furthermore have auto-suggestion you should set the "include_path" option in the project.
