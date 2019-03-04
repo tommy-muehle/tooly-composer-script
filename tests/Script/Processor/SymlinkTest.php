@@ -3,6 +3,7 @@
 namespace Tooly\Tests\Script\Processor;
 
 use Composer\IO\ConsoleIO;
+use Composer\Util\Platform;
 use Tooly\Factory\ToolFactory;
 use Tooly\Script\Configuration;
 use Tooly\Script\Helper;
@@ -38,7 +39,7 @@ class SymlinkTest extends \PHPUnit_Framework_TestCase
             ->getMock();
     }
 
-    public function testCanCreateASymlink()
+    public function testCanCreateASymlinkOrCopy()
     {
         $this->configuration
             ->expects($this->once())
@@ -49,9 +50,15 @@ class SymlinkTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder(Filesystem::class)
             ->getMock();
 
-        $filesystem
-            ->expects($this->once())
-            ->method('symlinkFile');
+        if (Platform::isWindows()) {
+            $filesystem
+                ->expects($this->once())
+                ->method('copyFile');
+        } else {
+            $filesystem
+                ->expects($this->once())
+                ->method('symlinkFile');
+        }
 
         $this->helper
             ->expects($this->once())
