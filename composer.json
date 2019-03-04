@@ -47,8 +47,7 @@
     "symfony/console": "^3.0",
     "mikey179/vfsstream": "1.6.*",
     "tm/gpg-verifier": "1.*",
-    "php-mock/php-mock-phpunit": "1.1.*",
-    "codeclimate/php-test-reporter": "dev-master"
+    "php-mock/php-mock-phpunit": "1.1.*"
   },
   "scripts": {
     "post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
