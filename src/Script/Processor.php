@@ -101,6 +101,9 @@ class Processor
         }
 
         $filename = $tool->getFilename();
+        if ($tool->renameToConfigKey()) {
+            $filename = $tool->getName();
+        }
         $composerDir = $this->configuration->getComposerBinDirectory();
         $composerPath = $composerDir . DIRECTORY_SEPARATOR . basename($filename);
 
