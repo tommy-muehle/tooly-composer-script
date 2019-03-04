@@ -66,7 +66,8 @@ In this part you can add your needed phar tools under the key "tools".
       },
       "phpcpd": {
         "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar",
-        "only-dev": true
+        "only-dev": true,
+        "rename": true
       },
       "security-checker": {
         "url": "http://get.sensiolabs.org/security-checker.phar",
@@ -84,6 +85,10 @@ In this part you can add your needed phar tools under the key "tools".
 
 After you add the name of the tool as key, you need only one further parameter. The *"url"*.
 The url can be a link to a specific version, such as x.y.z, or a link to the latest version for this phar.
+
+### rename (optional, default false)
+
+Rename the downloaded tool to the name that is used as key.
 
 ### sign-url (optional, default none)
 
