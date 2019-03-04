@@ -7,8 +7,7 @@
     "phar-management",
     "composer-phar",
     "phar",
-    "phar-handling",
-    "gpg-verification"
+    "phar-handling"
   ],
   "homepage": "https://github.com/tommy-muehle/tooly-composer-script",
   "authors": [
@@ -46,7 +45,6 @@
     "composer/composer": "1.*",
     "symfony/console": "^3.0",
     "mikey179/vfsstream": "1.6.*",
-    "tm/gpg-verifier": "1.*",
     "php-mock/php-mock-phpunit": "1.1.*"
   },
   "scripts": {
