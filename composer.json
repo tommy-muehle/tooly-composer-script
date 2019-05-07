@@ -65,6 +65,7 @@
       },
       "phpmd": {
         "url": "http://static.phpmd.org/php/latest/phpmd.phar",
+        "fallback-url": "https://tooly.me-dresden.de/phpmd/2.6.0/phpmd.phar",
         "force-replace": true
       },
       "security-checker": {
