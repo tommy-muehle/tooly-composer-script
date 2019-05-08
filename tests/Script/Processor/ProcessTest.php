@@ -121,4 +121,56 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
         $processor = new Processor($this->io, $this->helper, $this->configuration);
         $processor->process($tool);
     }
+
+    public function testCanSuccessfullyDownloadAToolViaFallbackUrl()
+    {
+        vfsStream::setup('bin');
+
+        $downloader = $this
+            ->getMockBuilder(Downloader::class)
+            ->getMock();
+
+        $downloader
+            ->expects($this->exactly(3))
+            ->method('isAccessible')
+            ->will($this->onConsecutiveCalls(false, true, false));
+
+        $filesystem = $this
+            ->getMockBuilder(Filesystem::class)
+            ->getMock();
+
+        $filesystem
+            ->method('isFileAlreadyExist')
+            ->willReturn(false);
+
+        $this->helper
+            ->method('getFilesystem')
+            ->willReturn($filesystem);
+
+        $this->helper
+            ->expects($this->exactly(4))
+            ->method('getDownloader')
+            ->willReturn($downloader);
+
+        $this->helper
+            ->method('isFileAlreadyExist')
+            ->willReturn(false);
+
+        $this->io
+            ->expects($this->exactly(2))
+            ->method('write');
+
+        $tool = $this
+            ->getMockBuilder(Tool::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $tool
+            ->expects($this->exactly(2))
+            ->method('getFallbackUrl')
+            ->willReturn('//test.html');
+
+        $processor = new Processor($this->io, $this->helper, $this->configuration);
+        $processor->process($tool);
+    }
 }

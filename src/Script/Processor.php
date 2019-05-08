@@ -9,7 +9,6 @@ use Tooly\Script\Decision\FileAlreadyExistDecision;
 use Tooly\Script\Decision\IsAccessibleDecision;
 use Tooly\Script\Decision\IsVerifiedDecision;
 use Tooly\Script\Decision\OnlyDevDecision;
-use Tooly\Script\Decision\UseFallbackURLDecision;
 use Tooly\Model\Tool;
 
 /**
@@ -124,7 +123,6 @@ class Processor
         return [
             new OnlyDevDecision($this->configuration, $this->helper),
             new IsAccessibleDecision($this->configuration, $this->helper),
-            new UseFallbackURLDecision($this->configuration, $this->helper),
             new FileAlreadyExistDecision($this->configuration, $this->helper),
             new IsVerifiedDecision($this->configuration, $this->helper),
             new DoReplaceDecision($this->configuration, $this->helper, $this->io),

@@ -17,7 +17,7 @@ class IsAccessibleDecision extends AbstractDecision
     public function canProceed(Tool $tool)
     {
         if (false === $this->helper->getDownloader()->isAccessible($tool->getUrl())) {
-            return false;
+            return $this->fallbackUrlIsAccessible($tool);
         }
 
         if (empty($tool->getSignUrl())) {
@@ -37,5 +37,17 @@ class IsAccessibleDecision extends AbstractDecision
     public function getReason()
     {
         return '<error>At least one given URL are not accessible!</error>';
+    }
+
+    /**
+     * @param Tool $tool
+     *
+     * @return bool
+     */
+    private function fallbackUrlIsAccessible(Tool $tool)
+    {
+        $fallbackUrl = $tool->getFallbackUrl();
+
+        return false === empty($fallbackUrl) && true === $this->helper->getDownloader()->isAccessible($fallbackUrl);
     }
 }
