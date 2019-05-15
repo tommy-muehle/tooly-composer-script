@@ -74,6 +74,28 @@ class IsAccessibleDecisionTest extends DecisionTestCase
         ])));
     }
 
+    public function testNotAccessibleToolUrlButAccessibleFallbackUrlReturnsTrue()
+    {
+        $downloader = $this
+            ->getMockBuilder(Downloader::class)
+            ->getMock();
+
+        $downloader
+            ->expects($this->exactly(2))
+            ->method('isAccessible')
+            ->will($this->onConsecutiveCalls(false, true));
+
+        $this->helper
+            ->expects($this->exactly(2))
+            ->method('getDownloader')
+            ->willReturn($downloader);
+
+        $decision = new IsAccessibleDecision($this->configuration, $this->helper);
+        $this->assertTrue($decision->canProceed(ToolFactory::createTool('tool', __DIR__, [
+            'fallback-url' => 'fallback-url'
+        ])));
+    }
+
     public function testAccessibleUrlsWillReturnTrue()
     {
         $downloader = $this

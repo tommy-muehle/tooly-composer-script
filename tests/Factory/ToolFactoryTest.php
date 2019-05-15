@@ -18,14 +18,19 @@ class ToolFactoryTest extends \PHPUnit_Framework_TestCase
         $tool = ToolFactory::createTool('test', 'vfs://root', [
             'url' => 'my-url',
             'sign-url' => 'my-sign-url',
-            'force-replace' => true
+            'force-replace' => true,
+            'only-dev' => false,
+            'rename' => true,
+            'fallback-url' => 'fallback-url'
         ]);
 
         $this->assertInstanceOf(Tool::class, $tool);
         $this->assertEquals('my-url', $tool->getUrl());
         $this->assertEquals('my-sign-url', $tool->getSignUrl());
         $this->assertTrue($tool->forceReplace());
-        $this->assertTrue($tool->isOnlyDev());
+        $this->assertFalse($tool->isOnlyDev());
+        $this->assertTrue($tool->renameToConfigKey());
+        $this->assertEquals('fallback-url', $tool->getFallbackUrl());
     }
 
     public function testCanCreateMultipleTools()

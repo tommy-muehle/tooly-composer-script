@@ -9,7 +9,6 @@ use Tooly\Script\Decision\FileAlreadyExistDecision;
 use Tooly\Script\Decision\IsAccessibleDecision;
 use Tooly\Script\Decision\IsVerifiedDecision;
 use Tooly\Script\Decision\OnlyDevDecision;
-use Tooly\Script\Helper;
 use Tooly\Model\Tool;
 
 /**
@@ -80,7 +79,7 @@ class Processor
             return;
         }
 
-        $data = $this->helper->getDownloader()->download($tool->getUrl());
+        $data = $this->helper->getDownloader()->download($this->getDownloadUrl($tool));
         $filename = $tool->getFilename();
 
         $this->helper->getFilesystem()->createFile($filename, $data);
@@ -165,5 +164,19 @@ class Processor
 
             $this->helper->getFilesystem()->remove($path);
         }
+    }
+
+    /**
+     * @param Tool $tool
+     *
+     * @return string
+     */
+    private function getDownloadUrl(Tool $tool)
+    {
+        if (false === $this->helper->getDownloader()->isAccessible($tool->getUrl())) {
+            return $tool->getFallbackUrl();
+        }
+
+        return $tool->getUrl();
     }
 }

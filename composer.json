@@ -65,6 +65,7 @@
       },
       "phpmd": {
         "url": "http://static.phpmd.org/php/latest/phpmd.phar",
+        "fallback-url": "https://github.com/jakzal/phpmd/releases/download/2.6.0-jakzal-2/phpmd.phar",
         "force-replace": true
       },
       "security-checker": {

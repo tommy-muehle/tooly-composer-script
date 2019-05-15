@@ -43,11 +43,15 @@ class Tool
     private $rename = false;
 
     /**
+     * @var string
+     */
+    private $fallbackUrl;
+
+    /**
      * @param string $name
      * @param string $filename
      * @param string $url
      * @param string $signUrl
-     *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct($name, $filename, $url, $signUrl = null)
@@ -136,5 +140,23 @@ class Tool
     public function renameToConfigKey()
     {
         return $this->rename;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return void
+     */
+    public function setFallbackUrl($url)
+    {
+        $this->fallbackUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFallbackUrl()
+    {
+        return $this->fallbackUrl;
     }
 }

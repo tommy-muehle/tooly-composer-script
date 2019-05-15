@@ -24,6 +24,7 @@ class ToolFactory
             'only-dev' => true,
             'force-replace' => false,
             'rename' => false,
+            'fallback-url' => null,
         ];
 
         $parameters = array_merge($defaults, $parameters);
@@ -45,6 +46,10 @@ class ToolFactory
 
         if (true === $parameters['rename']) {
             $tool->setNameToToolKey();
+        }
+
+        if (null !== $parameters['fallback-url']) {
+            $tool->setFallbackUrl($parameters['fallback-url']);
         }
 
         return $tool;
