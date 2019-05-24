@@ -16,7 +16,13 @@ class FileAlreadyExistDecision extends AbstractDecision
      */
     public function canProceed(Tool $tool)
     {
-        if (false === $this->helper->isFileAlreadyExist($tool->getFilename(), $tool->getUrl())) {
+        $url = $tool->getUrl();
+
+        if (false === $this->helper->getDownloader()->isAccessible($url)) {
+            $url = $tool->getFallbackUrl();
+        }
+
+        if (false === $this->helper->isFileAlreadyExist($tool->getFilename(), $url)) {
             return true;
         }
 
