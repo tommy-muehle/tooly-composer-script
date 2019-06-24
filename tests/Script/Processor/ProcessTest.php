@@ -131,7 +131,7 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $downloader
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('isAccessible')
             ->will($this->onConsecutiveCalls(false, true, false));
 
@@ -148,7 +148,7 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
             ->willReturn($filesystem);
 
         $this->helper
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(5))
             ->method('getDownloader')
             ->willReturn($downloader);
 

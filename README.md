@@ -105,6 +105,13 @@ You can add the requirement with this command:
 This check often fails if you dont has the public key from the tool author 
 in your GPG keychain. 
 
+### fallback-url (optional, default none)
+
+This option is useful if you want to add an extra layer of stability to your daily build processes.
+
+In case the required url is not accessible and a `fallback-url` is set, tooly uses the fallback url to download the phar file. 
+The fallback url can be a link to a specific version, such as x.y.z, or a link to the latest version for this phar.
+
 ### force-replace (optional, default false)
 
 Every time you update or install with composer the phar tools are checked. You are asked if you want to overwrite
