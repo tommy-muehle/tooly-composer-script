@@ -8,11 +8,12 @@ use Tooly\Script\Helper;
 use Tooly\Script\Helper\Filesystem;
 use Tooly\Script\Helper\Downloader;
 use Tooly\Script\Helper\Verifier;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests
  */
-class HelperTest extends \PHPUnit_Framework_TestCase
+class HelperTest extends TestCase
 {
     use PHPMock;
 

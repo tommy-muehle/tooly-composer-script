@@ -31,7 +31,6 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tooly\\": "src/",
       "Tooly\\Tests\\": "tests/"
     }
   },

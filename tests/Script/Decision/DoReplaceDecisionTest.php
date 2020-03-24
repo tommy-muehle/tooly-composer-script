@@ -27,7 +27,7 @@ class DoReplaceDecisionTest extends DecisionTestCase
      */
     private $helperSet;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

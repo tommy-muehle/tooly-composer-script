@@ -3,14 +3,13 @@
 namespace Tooly\Tests\Script\Helper;
 
 use Composer\Util\Platform;
-use org\bovigo\vfs\vfsStream;
-use phpmock\phpunit\PHPMock;
 use Tooly\Script\Helper\Filesystem;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Script\Helper
  */
-class FilesystemTest extends \PHPUnit_Framework_TestCase
+class FilesystemTest extends TestCase
 {
     /**
      * @var Filesystem
@@ -27,14 +26,14 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
      */
     private $testFile;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->filesystem = new Filesystem;
         $this->testDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'test';
         $this->testFile = $this->testDirectory . DIRECTORY_SEPARATOR . 'file';
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         if (is_dir($this->testDirectory)) {
             $this->filesystem->removeDirectory($this->testDirectory);

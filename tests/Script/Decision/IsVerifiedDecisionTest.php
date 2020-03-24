@@ -2,7 +2,6 @@
 
 namespace Tooly\Tests\Script\Decision;
 
-use Tooly\Factory\ToolFactory;
 use Tooly\Model\Tool;
 use Tooly\Script\Decision\IsVerifiedDecision;
 

@@ -4,17 +4,18 @@ namespace Tooly\Tests\Script\Decision;
 
 use Tooly\Script\Configuration;
 use Tooly\Script\Helper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Script\Decision
  */
-abstract class DecisionTestCase extends \PHPUnit_Framework_TestCase
+abstract class DecisionTestCase extends TestCase
 {
     protected $helper;
 
     protected $configuration;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->helper = $this
             ->getMockBuilder(Helper::class)

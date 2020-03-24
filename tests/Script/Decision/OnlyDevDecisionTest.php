@@ -3,9 +3,7 @@
 namespace Tooly\Tests\Script\Decision;
 
 use Tooly\Model\Tool;
-use Tooly\Script\Configuration;
 use Tooly\Script\Decision\OnlyDevDecision;
-use Tooly\Script\Helper;
 
 /**
  * @package Tooly\Tests\Script\Decision

@@ -2,14 +2,13 @@
 
 namespace Tooly\Tests\Script\Helper;
 
-use TM\GPG\Verification\Exception\VerificationException;
 use Tooly\Script\Helper\Verifier;
-use TM\GPG\Verification\Verifier as GPGVerifier;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Helper
  */
-class VerifierTest extends \PHPUnit_Framework_TestCase
+class VerifierTest extends TestCase
 {
     public function testCanCheckIfFileSumsAreEqual()
     {

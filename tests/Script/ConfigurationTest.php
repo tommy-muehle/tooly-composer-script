@@ -7,11 +7,12 @@ use Composer\Config;
 use Composer\Package\Package;
 use Tooly\Script\Configuration;
 use Tooly\Script\Mode;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Script
  */
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     public function testIfNoToolsSetEmptyToolSetIsGiven()
     {
