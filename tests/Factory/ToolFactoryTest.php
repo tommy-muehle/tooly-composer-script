@@ -5,11 +5,12 @@ namespace Tooly\Tests\Factory;
 use org\bovigo\vfs\vfsStream;
 use Tooly\Factory\ToolFactory;
 use Tooly\Model\Tool;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Factory
  */
-class ToolFactoryTest extends \PHPUnit_Framework_TestCase
+class ToolFactoryTest extends TestCase
 {
     public function testCanCreateATool()
     {

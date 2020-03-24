@@ -4,11 +4,12 @@ namespace Tooly\Tests\Script\Helper;
 
 use phpmock\phpunit\PHPMock;
 use Tooly\Script\Helper\Downloader;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Script\Helper
  */
-class DownloaderTest extends \PHPUnit_Framework_TestCase
+class DownloaderTest extends TestCase
 {
     use PHPMock;
 

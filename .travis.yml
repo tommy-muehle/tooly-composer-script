@@ -12,15 +12,15 @@ matrix:
     - php: 7.0
     - php: 7.1
     - php: 7.2
+    - php: 7.3
     - php: nightly
   allow_failures:
-    - php: 7.2
     - php: nightly
   fast_finish: true
 before_install:
   - composer selfupdate
 install:
-  - composer update --no-interaction
+  - composer install --no-interaction
 script:
   - ./vendor/bin/phpunit.phar --coverage-clover build/logs/clover.xml
 notifications:

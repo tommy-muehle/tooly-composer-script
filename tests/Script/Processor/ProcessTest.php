@@ -11,11 +11,12 @@ use Tooly\Script\Helper;
 use Tooly\Script\Helper\Downloader;
 use Tooly\Script\Helper\Filesystem;
 use Tooly\Script\Processor;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Scrip\Processor
  */
-class ProcessTest extends \PHPUnit_Framework_TestCase
+class ProcessTest extends TestCase
 {
     private $io;
 
@@ -23,7 +24,7 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
 
     private $configuration;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->io = $this
             ->getMockBuilder(ConsoleIO::class)

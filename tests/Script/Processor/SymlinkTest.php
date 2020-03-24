@@ -9,11 +9,12 @@ use Tooly\Script\Configuration;
 use Tooly\Script\Helper;
 use Tooly\Script\Helper\Filesystem;
 use Tooly\Script\Processor;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Scrip\Processor
  */
-class SymlinkTest extends \PHPUnit_Framework_TestCase
+class SymlinkTest extends TestCase
 {
     private $io;
 
@@ -21,7 +22,7 @@ class SymlinkTest extends \PHPUnit_Framework_TestCase
 
     private $configuration;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->io = $this
             ->getMockBuilder(ConsoleIO::class)

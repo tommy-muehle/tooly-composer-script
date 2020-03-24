@@ -3,17 +3,16 @@
 namespace Tooly\Tests\Script\Processor;
 
 use Composer\IO\ConsoleIO;
-use Composer\Util\Silencer;
 use org\bovigo\vfs\vfsStream;
 use Tooly\Script\Configuration;
 use Tooly\Script\Helper;
 use Tooly\Script\Processor;
-use Tooly\Script\Helper\Filesystem;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @package Tooly\Tests\Script
  */
-class CleanupTest extends \PHPUnit_Framework_TestCase
+class CleanupTest extends TestCase
 {
     private $configuration;
 
@@ -21,7 +20,7 @@ class CleanupTest extends \PHPUnit_Framework_TestCase
 
     private $root;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->root = vfsStream::setup();
 

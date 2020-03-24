@@ -3,7 +3,6 @@
 namespace Tooly\Tests\Script\Decision;
 
 use Tooly\Factory\ToolFactory;
-use Tooly\Model\Tool;
 use Tooly\Script\Decision\IsAccessibleDecision;
 use Tooly\Script\Helper\Downloader;
 
