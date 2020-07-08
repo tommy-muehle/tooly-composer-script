@@ -92,6 +92,8 @@ class Processor
 
     /**
      * @param Tool $tool
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function symlinkOrCopy(Tool $tool)
     {

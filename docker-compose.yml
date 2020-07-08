@@ -1,0 +1,74 @@
+version: '2'
+services:
+  php-5.6:
+    image: library/php:5.6-alpine
+    command: sh -c "
+      bin/phpcs.phar --standard=PSR2 ./src -v
+      && bin/phpcpd.phar ./src
+      && bin/phpunit.phar
+      "
+    working_dir: /app
+    volumes:
+      - ./:/app
+  php-7.0:
+    image: library/php:7.0-alpine
+    command: sh -c "
+      bin/phpcs.phar --standard=PSR2 ./src -v
+      && bin/phpcpd.phar ./src
+      && bin/phpunit.phar
+      "
+    working_dir: /app
+    volumes:
+      - ./:/app
+  php-7.1:
+    image: library/php:7.1-alpine
+    command: sh -c "
+      bin/phpcs.phar --standard=PSR2 ./src -v
+      && bin/phpcpd.phar ./src
+      && bin/phpunit.phar
+      "
+    working_dir: /app
+    volumes:
+      - ./:/app
+  php-7.2:
+    image: library/php:7.2-alpine
+    command: sh -c "
+      bin/phpcs.phar --standard=PSR2 ./src -v
+      && bin/phpcpd.phar ./src
+      && bin/phpunit.phar
+      "
+    working_dir: /app
+    volumes:
+      - ./:/app
+  php-7.3:
+    image: library/php:7.3-alpine
+    command: sh -c "
+      bin/phpcs.phar --standard=PSR2 ./src -v
+      && bin/phpcpd.phar ./src
+      && bin/phpunit.phar
+      "
+    working_dir: /app
+    volumes:
+      - ./:/app
+  php-7.4:
+    image: library/php:7.4-alpine
+    command: sh -c "
+      php -v
+      && bin/phpcs.phar --standard=PSR2 ./src -v
+      && bin/phpcpd.phar ./src
+      && php -d error_reporting="E_ALL^E_DEPRECATED" bin/phpunit.phar
+      "
+    working_dir: /app
+    volumes:
+      - ./:/app
+  nightly:
+    image: tommymuehle/docker-alpine-php-nightly:latest
+    command: sh -c "
+      php -v
+      && bin/phpcs.phar --standard=PSR2 ./src -v
+      && bin/phpcpd.phar ./src
+      && bin/phpunit.phar
+      "
+    working_dir: /app
+    volumes:
+      - ./:/app

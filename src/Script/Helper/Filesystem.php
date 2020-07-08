@@ -76,6 +76,7 @@ class Filesystem
      * @param $file
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function copyFile($sourceFile, $file)
     {

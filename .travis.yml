@@ -12,9 +12,10 @@ matrix:
     - php: 7.0
     - php: 7.1
     - php: 7.2
+    - php: 7.3
+    - php: 7.4
     - php: nightly
   allow_failures:
-    - php: 7.2
     - php: nightly
   fast_finish: true
 before_install:
@@ -22,12 +23,6 @@ before_install:
 install:
   - composer update --no-interaction
 script:
-  - ./vendor/bin/phpunit.phar --coverage-clover build/logs/clover.xml
+  - php -d error_reporting="E_ALL^E_DEPRECATED" ./vendor/bin/phpunit.phar --coverage-clover build/logs/clover.xml
 notifications:
   email: false
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/f5bcd59af82eb6dd98b3
-    on_success: always
-    on_failure: always
-    on_start: never

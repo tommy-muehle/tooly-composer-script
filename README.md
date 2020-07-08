@@ -7,7 +7,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/l1xixknycxctd1sm?svg=true)](https://ci.appveyor.com/project/tommy-muehle/tooly-composer-script)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d895d331-4322-4708-8924-d80c32d3fb17/mini.png)](https://insight.sensiolabs.com/projects/d895d331-4322-4708-8924-d80c32d3fb17)
 [![License](https://poser.pugx.org/tm/tooly-composer-script/license)](https://packagist.org/packages/tm/tooly-composer-script)
-[![Gitter](https://badges.gitter.im/tommy-muehle/tooly-composer-script.svg)](https://gitter.im/tommy-muehle/tooly-composer-script?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 With tooly [composer-script](https://getcomposer.org/doc/articles/scripts.md) you can version needed PHAR files in your project's composer.json without adding them directly to a VCS, 
 * to save disk space at vcs repository
