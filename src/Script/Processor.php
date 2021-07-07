@@ -101,11 +101,11 @@ class Processor
 
         $filename = $tool->getFilename();
         if ($tool->renameToConfigKey()) {
-            $filename = $tool->getName();
+          $filename = dirname($filename) . DIRECTORY_SEPARATOR . $tool->getName();
         }
         $composerDir = $this->configuration->getComposerBinDirectory();
         $composerPath = $composerDir . DIRECTORY_SEPARATOR . basename($filename);
-
+        $filename = str_replace('.phar', '', $filename) . '.phar';
         if (Platform::isWindows()) {
             $this->helper->getFilesystem()->copyFile($filename, $composerPath);
         } else {
