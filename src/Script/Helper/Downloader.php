@@ -18,7 +18,7 @@ class Downloader
     {
         $context = $this->getContext($url);
 
-        return is_resource(@fopen($url, 'r', null, $context));
+        return is_resource(@fopen($url, 'r', false, $context));
     }
 
     /**
